@@ -1,23 +1,34 @@
-import logo from './logo.svg';
+import Navigation from './components/Navigation.js';
+import Footer from './components/Footer.js';
+import coverImg from './images/cover.jpg';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header>
+        <div className="wrapper header">
+          <div className="title">
+            <i class="fas fa-gas-pump"></i>
+            Fuel Tracker
+          </div>
+          <Navigation />
+        </div>
       </header>
+      <main>
+        <div className="wrapper">
+          <section>
+            <div>
+              <h1>Managing your Viechles, Expences and Time</h1>
+              <h3>Easy and everywhere!</h3>
+            </div>
+            <img src={coverImg} alt="" srcset="" />
+          </section>
+        </div>
+      </main>
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 }
