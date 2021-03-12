@@ -1,0 +1,67 @@
+.features {
+    margin-top: 60px;
+    text-align: center;
+    display: flex;
+}
+
+.features .wrapper {
+    width: 100%;
+    align-items: center;
+}
+
+.features p {
+    margin: 0;
+}
+
+.features article {
+    display: flex;
+    width: 70%;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.line {
+    width: 70%;
+    border-bottom: 1px solid gray;
+    margin-bottom: 30px;
+}
+
+.features article:nth-of-type(odd) {
+    flex-direction: row-reverse;
+}
+
+.features article:nth-of-type(odd) i {
+    margin-left: 10px;
+    text-align: start;
+}
+
+.features article:nth-of-type(even) div {
+    margin-left: 10px;
+    text-align: start;
+}
+
+.features article:nth-of-type(odd) div {
+    margin-right: 20px;
+    text-align: end;
+}
+
+.features article:nth-of-type(even) i {
+    margin-right: 20px;
+    text-align: end;
+}
+
+.features article i {
+    font-size: 70px;
+}
+
+.features article i {
+    flex-basis: 50%;
+}
+
+.features article i:nth-of-type(even) {
+    justify-content: flex-end;
+}
+
+.features article div {
+    flex-basis: 50%;
+}

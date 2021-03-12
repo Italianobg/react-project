@@ -4,10 +4,18 @@ function Navigation(props) {
   return (
     <ul>
       <li> Welcome {props.name} </li>
-      <li> Add Car </li>
-      <li> Login </li>
-      <li> Register </li>
-      <li> Logout </li>
+      <li>
+        <a href="#">Add Car</a>
+      </li>
+      <li>
+        <a href="#">Login</a>
+      </li>
+      <li>
+        <a href="#">Register</a>
+      </li>
+      <li>
+        <a href="#">Logout</a>
+      </li>
     </ul>
   );
 }

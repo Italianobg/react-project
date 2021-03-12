@@ -1,6 +1,8 @@
 import Navigation from './components/Navigation.js';
 import Footer from './components/Footer.js';
-import coverImg from './images/cover.jpg';
+import Statistics from './components/Statistics.js';
+import Features from './components/Features.js';
+import coverImg from './images/title.jfif';
 import './App.css';
 
 function App() {
@@ -17,13 +19,17 @@ function App() {
       </header>
       <main>
         <div className="wrapper">
-          <section>
-            <div>
-              <h1>Managing your Viechles, Expences and Time</h1>
+          <section className="heading">
+            <div className="heading-title">
+              <h1>Managing your Vehicles, Expenses & Time</h1>
               <h3>Easy and everywhere!</h3>
             </div>
-            <img src={coverImg} alt="" srcset="" />
+            <div className="heading-img">
+              <img src={coverImg} alt="" srcset="" />
+            </div>
           </section>
+          <Statistics />
+          <Features />
         </div>
       </main>
       <footer>

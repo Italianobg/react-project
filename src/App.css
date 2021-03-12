@@ -25,12 +25,45 @@ main {
     margin-bottom: 40px;
 }
 
-main section {
-    display: flex;
-}
-
 footer {
     background-color: #2380ad;
     color: white;
     box-shadow: 0px 2px 15px 5px #7f7f7f;
+}
+
+.heading .wrapper {
+    justify-content: space-between;
+}
+
+.heading {
+    color: rgb(76, 76, 76);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.heading-img {
+    max-width: 600px;
+    height: 230px;
+    box-shadow: inset 0px 0px 9px 22px #ffffff;
+}
+
+.heading-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: -1;
+    box-sizing: border-box;
+    border: 2px solid white;
+}
+
+.heading-title {
+    padding: 50px 0 50px 50px;
+    text-align: end;
+}
+
+main .wrapper {
+    flex-direction: column;
 }
