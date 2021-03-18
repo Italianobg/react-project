@@ -1,14 +1,26 @@
-ul {
+nav ul {
     list-style: none;
     display: flex;
     padding: 0;
 }
 
-li {
-    margin: 20px;
+nav li {
+    box-sizing: border-box;
+    border-bottom: 2px solid transparent;
+    padding: 20px;
 }
 
-li a {
+nav li:hover {
+    font-weight: bold;
+    border-bottom: 2px solid white;
+}
+
+nav li .selected {
+    font-weight: bold;
+    border-bottom: 2px solid white;
+}
+
+nav li a {
     color: white;
     text-decoration: none;
 }

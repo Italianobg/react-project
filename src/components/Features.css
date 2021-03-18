@@ -2,6 +2,7 @@
     margin-top: 60px;
     text-align: center;
     display: flex;
+    margin-bottom: 40px;
 }
 
 .features .wrapper {
@@ -31,12 +32,12 @@
 }
 
 .features article:nth-of-type(odd) i {
-    margin-left: 10px;
+    margin-left: 20px;
     text-align: start;
 }
 
 .features article:nth-of-type(even) div {
-    margin-left: 10px;
+    margin-left: 20px;
     text-align: start;
 }
 
@@ -51,11 +52,9 @@
 }
 
 .features article i {
-    font-size: 70px;
-}
-
-.features article i {
+    font-size: 90px;
     flex-basis: 50%;
+    color: rgb(76, 76, 76);
 }
 
 .features article i:nth-of-type(even) {
