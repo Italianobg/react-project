@@ -1,0 +1,90 @@
+.selectCar {
+    position: relative;
+    display: flex;
+    margin-bottom: 15px;
+    align-items: flex-end;
+    width: 70%;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.selectCar div {
+    flex-basis: 26%;
+    margin: 1%;
+}
+
+.selectCar div:first-of-type {
+    flex-basis: 100%;
+}
+
+.selectCar div:last-of-type {
+    flex-basis: 10%;
+}
+
+.selectCar select {
+    font-family: 'Arial';
+    display: inline-block;
+    width: 100%;
+    cursor: pointer;
+    padding: 10px 15px;
+    outline: 0;
+    border: 0px solid #000000;
+    border-radius: 0px;
+    background: #237fad27;
+    color: #7b7b7b;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.seselectCarlect select::-ms-expand {
+    display: none;
+}
+
+.selectCar select:hover,
+.selectCar select:focus {
+    color: #000000;
+    background: #237fad4b;
+}
+
+.selectCar select:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.select_arrow {
+    position: absolute;
+    top: 16px;
+    right: 15px;
+    width: 10px;
+    height: 10px;
+    border: solid #7b7b7b;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.selectCar select:hover~.select_arrow,
+.selectCar select:focus~.select_arrow {
+    border-color: #000000;
+}
+
+.selectCar select:disabled~.select_arrow {
+    border-top-color: #cccccc;
+}
+
+.selectCar button {
+    padding: 10px 15px;
+    margin: 0 auto;
+    width: 100px;
+    background-color: #237fad4b;
+    border: none;
+    outline: none;
+}
+
+.selectCar button:hover {
+    font-weight: bold;
+    background-color: #237fad6e;
+}

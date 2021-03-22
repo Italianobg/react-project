@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Statistics from './components/Statistics';
 import Features from './components/Features';
 import Cars from './components/Cars';
+import AddCar from './components/AddCar';
 import coverImg from './images/title.jfif';
 import './App.css';
 
@@ -36,6 +37,7 @@ function App() {
           <section className="main-content">
             <Statistics />
             <Features />
+            <AddCar />
           </section>
           <aside>
             <Cars />
