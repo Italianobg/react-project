@@ -1,8 +1,6 @@
 import './Features.css';
 import { Component } from 'react';
 
-import * as carsServices from '../services/Cars/carsServices';
-
 class Features extends Component {
   constructor(props) {
     super(props);
@@ -11,12 +9,6 @@ class Features extends Component {
       cars: [],
       selectedCar: null,
     };
-  }
-
-  componentDidMount() {
-    carsServices.getAll().then((cars) => {
-      console.log(cars);
-    });
   }
 
   render() {

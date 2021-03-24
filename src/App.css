@@ -1,5 +1,11 @@
 @import 'https://use.fontawesome.com/releases/v5.15.2/css/all.css';
 @import url('https://fonts.googleapis.com/css2?family=Paytone+One&display=swap');
+.App {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 header {
     background-color: #2380ad;
     color: white;
@@ -22,6 +28,7 @@ i {
 
 main {
     position: relative;
+    flex-grow: 1;
 }
 
 footer {
@@ -36,6 +43,7 @@ footer {
 
 .heading {
     margin-top: 40px;
+    margin-bottom: 40px;
     color: rgb(76, 76, 76);
     display: flex;
     align-items: center;

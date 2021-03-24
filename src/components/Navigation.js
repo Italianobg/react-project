@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import './Navigation.css';
 
 function Navigation(props) {
@@ -6,16 +7,29 @@ function Navigation(props) {
       <ul>
         <li> Welcome {props.name} </li>
         <li>
-          <a href="#"> Add Car </a>
+          <NavLink to="/" activeClassName="selected" exact>
+            Home
+          </NavLink>
         </li>
         <li>
-          <a href="#"> Login </a>
+          <NavLink to="/add-car" activeClassName="selected" exact>
+            Add Car
+          </NavLink>
         </li>
         <li>
-          <a href="#"> Register </a>
+          <NavLink to="/login" activeClassName="selected" exact>
+            Login
+          </NavLink>
         </li>
         <li>
-          <a href="#"> Logout </a>
+          <NavLink to="/register" activeClassName="selected" exact>
+            Register
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/logout" activeClassName="selected" exact>
+            Logout
+          </NavLink>
         </li>
       </ul>
     </nav>

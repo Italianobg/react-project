@@ -4,17 +4,28 @@
     margin-bottom: 15px;
     align-items: flex-end;
     width: 70%;
-    margin: 0 auto;
+    margin: 40px auto;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .selectCar div {
     flex-basis: 26%;
-    margin: 1%;
 }
 
 .selectCar div:first-of-type {
     flex-basis: 100%;
+    background: #237fad27;
+    display: flex;
+    font-size: 13.3333px;
+    margin: 5px 0;
+    justify-content: center;
+}
+
+.selectCar div:first-of-type:hover {
+    background: #237fad4b;
+    color: black;
+    font-weight: bold;
 }
 
 .selectCar div:last-of-type {
@@ -82,9 +93,35 @@
     background-color: #237fad4b;
     border: none;
     outline: none;
+    color: rgb(76, 76, 76);
 }
 
 .selectCar button:hover {
     font-weight: bold;
     background-color: #237fad6e;
+}
+
+.selectCar h2 {
+    flex-basis: 100%;
+    text-align: center;
+    color: rgb(76, 76, 76);
+}
+
+.filewrap {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: rgb(76, 76, 76);
+    width: 100%;
+    text-align: center;
+}
+
+input[type='file'] {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
 }

@@ -8,6 +8,7 @@ import Cars from './components/Cars';
 import AddCar from './components/AddCar';
 import coverImg from './images/title.jfif';
 import './App.css';
+import { Route } from 'react-router-dom';
 
 function App() {
   return (
@@ -22,8 +23,8 @@ function App() {
         </div>
       </header>
       <main>
-        <Login />
-        <Register />
+        <Route path="/login" component={Login} exact />
+        <Route path="/register" component={Register} exact />
         <div className="wrapper">
           <section className="heading">
             <div className="heading-title">
@@ -35,9 +36,11 @@ function App() {
             </div>
           </section>
           <section className="main-content">
-            <Statistics />
-            <Features />
-            <AddCar />
+            <Route path={['/', '/login', '/register']} exact>
+              <Statistics />
+              <Features />
+            </Route>
+            <Route path="/add-car" component={AddCar} exact />
           </section>
           <aside>
             <Cars />
