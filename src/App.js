@@ -5,12 +5,31 @@ import Footer from './components/Footer';
 import Statistics from './components/Statistics';
 import Features from './components/Features';
 import Cars from './components/Cars';
-import AddCar from './components/AddCar';
+import AddCar from './components/AddCar/AddCar';
 import coverImg from './images/title.jfif';
 import './App.css';
 import { Route } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getAllCars } from './services/Cars/carFirebase';
 
 function App() {
+  const [carList, setCarList] = useState([]);
+
+  function setCarListHandler(carList) {
+    setCarList(carList);
+  }
+  useEffect(() => {
+    console.log('getAllCars');
+    getAllCars().then((cars) => {
+      setCarList(
+        cars.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+      );
+    });
+  }, []);
+
   return (
     <div className="App">
       <header>
@@ -37,14 +56,16 @@ function App() {
           </section>
           <section className="main-content">
             <Route path={['/', '/login', '/register']} exact>
-              <Statistics />
+              <Statistics carList={carList} />
               <Features />
             </Route>
             <Route path="/add-car" component={AddCar} exact />
           </section>
-          <aside>
-            <Cars />
-          </aside>
+          <section>
+            <Route path={['/', '/login', '/register']} exact>
+              <Cars carList={carList} setCarListHandler={setCarListHandler} />
+            </Route>
+          </section>
         </div>
       </main>
 

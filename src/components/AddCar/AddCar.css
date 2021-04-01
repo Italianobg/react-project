@@ -1,34 +1,48 @@
 .selectCar {
     position: relative;
-    display: flex;
     margin-bottom: 15px;
-    align-items: flex-end;
     width: 70%;
     margin: 40px auto;
-    flex-wrap: wrap;
-    justify-content: space-between;
 }
 
-.selectCar div {
+.selectCar form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.selectCar form img {
+    margin: 0 auto;
+}
+
+.selectCar form div {
     flex-basis: 26%;
 }
 
-.selectCar div:first-of-type {
+.selectCar form div:first-of-type {
     flex-basis: 100%;
-    background: #237fad27;
     display: flex;
     font-size: 13.3333px;
     margin: 5px 0;
     justify-content: center;
 }
 
-.selectCar div:first-of-type:hover {
-    background: #237fad4b;
+.selectCar form div:first-of-type:hover {
     color: black;
     font-weight: bold;
 }
 
-.selectCar div:last-of-type {
+.uploadFile {
+    background: #237fad27;
+    flex-basis: 100%;
+}
+
+.uploadFile:hover {
+    background: #237fad4b;
+}
+
+.selectCar form>div:last-of-type {
     flex-basis: 10%;
 }
 
@@ -124,4 +138,20 @@ input[type='file'] {
     left: 0;
     opacity: 0;
     cursor: pointer;
+}
+
+.loading {
+    max-height: 40px;
+}
+
+.errors {
+    color: rgb(196, 104, 104);
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.errors p {
+    margin: 0;
+    padding: 0;
 }
