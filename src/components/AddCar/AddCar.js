@@ -5,24 +5,41 @@ import loading from '../../images/loading.gif';
 import CarType from './CarType';
 import CarMake from './CarMake';
 import CarModel from './CarModel';
-import { useHistory } from 'react-router-dom';
-import { addCar } from '../../services/Cars/carFirebase';
+import { useHistory, useParams } from 'react-router-dom';
+import {
+  addCar,
+  editCar,
+  getCarDetails,
+} from '../../services/Cars/carFirebase';
 const CarImage = React.lazy(() => import('./CarImage'));
 
 function AddCar(props) {
+  const { id } = useParams();
+  const [imageUrl, setImageUrl] = useState('');
   const [vehicles, setVehicles] = useState([]);
   const [selectedType, setSelectedType] = useState('');
   const [selectedMake, setSelectedMake] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
-  const [makes, setMakes] = useState([{ id: 'unknown', name: 'Choose...' }]);
-  const [models, setModels] = useState([{ id: 'unknown', name: 'Choose...' }]);
+  const [makes, setMakes] = useState([
+    { id: 'unknownMakes', name: 'Choose...' },
+  ]);
+  const [models, setModels] = useState([
+    { id: 'unknownModels', name: 'Choose...' },
+  ]);
   const [formErrors, setFormErrors] = useState([]);
   let errors = [];
   let history = useHistory();
 
   useEffect(() => {
     let isSubscribed = true;
-
+    if (id) {
+      getCarDetails(id).then((car) => {
+        setSelectedType(car.data().type);
+        setSelectedMake(car.data().make);
+        setSelectedModel(car.data().model);
+        setImageUrl(car.data().imageUrl);
+      });
+    }
     carModels
       .getAll()
       .then((cars) => {
@@ -35,10 +52,14 @@ function AddCar(props) {
     return () => {
       isSubscribed = false;
     };
-  });
+  }, []);
 
   function setType(type) {
     setSelectedType(type);
+  }
+
+  function setImage(url) {
+    setImageUrl(url);
   }
 
   function setMake(make) {
@@ -63,17 +84,10 @@ function AddCar(props) {
     const make = e.target.make.value;
     const model = e.target.model.value;
 
-    let imageUrl = '';
     errors = [''];
     setFormErrors('');
 
-    if (e.target.hasOwnProperty('imageUrl')) {
-      imageUrl = e.target.imageUrl.src;
-    } else {
-      imageUrl = '';
-    }
-
-    if (imageUrl.length === 0) {
+    if (imageUrl === '') {
       errors.push('Please add picture');
     }
     if (type === 'A' || make === 'Choose...' || model === 'Choose...') {
@@ -82,36 +96,50 @@ function AddCar(props) {
     setFormErrors(errors);
 
     if (errors.length === 1) {
-      addCar(type, make, model, imageUrl)
-        .then(() => {
-          history.push('/');
-        })
-        .catch((err) => {
-          errors.push(e);
-          setFormErrors(errors);
-        });
+      if (id) {
+        editCar(type, make, model, imageUrl, id)
+          .then(() => {
+            history.push(`/car/${id}`);
+          })
+          .catch((err) => {
+            errors.push(e);
+            setFormErrors(errors);
+          });
+      } else {
+        addCar(type, make, model, imageUrl)
+          .then(() => {
+            history.push('/');
+          })
+          .catch((err) => {
+            errors.push(e);
+            setFormErrors(errors);
+          });
+      }
     }
   }
 
   return (
     <div className="selectCar">
-      <h2>Add your car</h2>
+      {id ? <h2>Edit your car</h2> : <h2>Add your car</h2>}
       <form onSubmit={onAddCarHandler}>
         <Suspense
           fallback={
             <img src={loading} alt="Loading..." className="loading"></img>
           }
         >
-          <CarImage />
+          <CarImage setImage={setImage} imageUrl={imageUrl} />
         </Suspense>
         <CarType
           vehicles={vehicles}
+          selectedType={selectedType}
           setType={setType}
           setAllMakes={setAllMakes}
         />
         <CarMake
           makes={makes}
           selectedType={selectedType}
+          selectedMake={selectedMake}
+          models={models}
           setMake={setMake}
           setAllModels={setAllModels}
         />
@@ -122,7 +150,11 @@ function AddCar(props) {
           setModel={setModel}
         />
         <div>
-          <button type="submit">Add Car</button>
+          {id ? (
+            <button type="submit">Edit Car</button>
+          ) : (
+            <button type="submit">Add Car</button>
+          )}
         </div>
       </form>
       <div className="errors">

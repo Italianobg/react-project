@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getAllCars } from '../services/Cars/carFirebase';
 import CarCard from './CarCard';
 import './Cars.css';
@@ -23,11 +24,17 @@ function Cars(props) {
 
       <div className="cars-list">
         {props.carList.map((car) => {
-          return <CarCard key={car.id} car={car} />;
+          return (
+            <div key={car.id}>
+              <Link to={`/car/${car.id}`}>
+                <CarCard car={car} />
+              </Link>
+            </div>
+          );
         })}
       </div>
 
-      {props.carList.lenght === 0 && <h4>No car in your garage!</h4>}
+      {props.carList.length === 0 && <h4>No cars in your garage!</h4>}
     </div>
   );
 }

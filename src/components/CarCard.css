@@ -1,4 +1,4 @@
-.cars-list article {
+.cars-list>div {
     flex-basis: 31%;
     box-sizing: border-box;
     margin: 1%;
@@ -6,7 +6,12 @@
     box-shadow: 0px 5px 10px -3px grey;
 }
 
-.cars-list article div:first-of-type {
+.cars-list div a {
+    text-decoration: none;
+    color: rgb(76, 76, 76);
+}
+
+.cars-list div a article div:first-of-type {
     border-top-left-radius: 13px;
     border-top-right-radius: 13px;
     background-color: #237fad27;
@@ -16,13 +21,13 @@
     align-items: center;
 }
 
-.cars-list article div img {
+.cars-list div a article div img {
     object-fit: cover;
     width: 100%;
     z-index: 1;
     max-height: 150px;
 }
 
-.cars-list article h4 {
+.cars-list div a article h4 {
     margin: 5px 0;
 }

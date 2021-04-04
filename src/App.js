@@ -11,6 +11,7 @@ import './App.css';
 import { Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getAllCars } from './services/Cars/carFirebase';
+import CarDetails from './components/CarDetails';
 
 function App() {
   const [carList, setCarList] = useState([]);
@@ -60,10 +61,14 @@ function App() {
               <Features />
             </Route>
             <Route path="/add-car" component={AddCar} exact />
+            <Route path="/car/edit/:id" component={AddCar} exact />
           </section>
           <section>
             <Route path={['/', '/login', '/register']} exact>
               <Cars carList={carList} setCarListHandler={setCarListHandler} />
+            </Route>
+            <Route path={['/car/:id', '/car/fuel-up/:id']} exact>
+              <CarDetails />
             </Route>
           </section>
         </div>

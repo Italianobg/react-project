@@ -1,14 +1,18 @@
 import { storage } from '../../firebase/firebase';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CarImage.css';
 
 function CarImage(props) {
   const [file, setFile] = useState(null);
   const [url, setURL] = useState('');
 
+  useEffect(() => {
+    setURL(props.imageUrl);
+  });
+
   function handleImageChange(e) {
     setFile(e.target.files[0]);
-    const uploadTask = storage
+    storage
       .ref(`/images/${e.target.files[0].name}`)
       .put(e.target.files[0])
       .then((res) => {
@@ -19,6 +23,7 @@ function CarImage(props) {
           .then((url) => {
             setFile(null);
             setURL(url);
+            props.setImage(url);
           });
       });
   }

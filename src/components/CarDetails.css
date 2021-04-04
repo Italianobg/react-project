@@ -1,0 +1,100 @@
+.car-details {
+    display: flex;
+    flex-wrap: wrap;
+    color: rgb(76, 76, 76);
+    margin-bottom: 60px;
+}
+
+.car-data {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.car-data-details {
+    flex-basis: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.car-data-details .car-make {
+    text-align: center;
+    flex-basis: 100%;
+}
+
+.car-data-details .line {
+    width: 90%;
+    margin-bottom: 5px;
+}
+
+.car-data-wrapper {
+    flex-basis: 55%;
+}
+
+.car-data-img-wrapper {
+    box-shadow: inset 0px 0px 9px 22px #ffffff;
+}
+
+.car-data-img-wrapper img {
+    width: 100%;
+    max-height: 350px;
+    object-fit: cover;
+    z-index: -1;
+    box-sizing: border-box;
+    border: 2px solid white;
+    position: relative;
+}
+
+.car-data-boxes {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.car-data-boxes .box {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    border-radius: 13px;
+    box-shadow: 0px 5px 10px -3px grey;
+    flex-grow: 1;
+    margin: 10px;
+}
+
+.car-data-boxes .box h4 {
+    border-top-left-radius: 13px;
+    border-top-right-radius: 13px;
+    background-color: #237fad27;
+    margin: 0;
+    padding: 15px;
+    text-align: center;
+}
+
+.car-data-boxes .box p {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.car-data-buttons button {
+    color: rgb(76, 76, 76);
+    background-color: transparent;
+    padding: 5px;
+    margin: 0 auto;
+    width: 140px;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    border-bottom: 2px solid transparent;
+}
+
+.car-data-buttons button:hover {
+    border-bottom: 2px solid black;
+    font-weight: bold;
+}
+
+.car-data-buttons button a {
+    color: rgb(76, 76, 76);
+    text-decoration: none;
+}
