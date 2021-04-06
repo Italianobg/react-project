@@ -73,7 +73,7 @@ function App() {
                 <Cars carList={carList} setCarListHandler={setCarListHandler} />
               </Route>
               <Route path={['/car/:id', '/car/fuel-up/:id']} exact>
-                <CarDetails />
+                <CarDetails carList={carList} />
               </Route>
             </section>
           </div>

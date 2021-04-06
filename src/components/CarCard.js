@@ -12,7 +12,11 @@ function CarCard(props) {
         <img src={props.car.imageUrl} alt="" />
       </div>
       <div>
-        <p> 40 </p>
+        <p>
+          {props.car['last milage']
+            ? `${props.car['last milage']} km`
+            : 'Time for Fuel Up!'}{' '}
+        </p>
       </div>
     </article>
   );

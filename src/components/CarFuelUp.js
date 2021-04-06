@@ -7,6 +7,7 @@ import {
 } from '../services/Cars/carFirebase';
 import './CarFuelUp.css';
 import useAPIError from '../hooks/useAPIError';
+import { useHistory, useParams } from 'react-router';
 
 const fuels = [
   { name: 'Petrol', types: ['A95', 'A98', 'A100'] },
@@ -36,7 +37,10 @@ function CarFuelUp(props) {
   const [fullTank, setFullTank] = useState(false);
   const didMount = useRef(false);
   const { addError } = useAPIError();
+  const { id } = useParams();
   let errors = [];
+  let history = useHistory();
+
   useEffect(() => {
     if (didMount.current) {
       setTypes(selectedFuel.types);
@@ -111,35 +115,88 @@ function CarFuelUp(props) {
 
   function addFuelUpHandler(e) {
     e.preventDefault();
-    if (e.target.odometer.value === '') {
-      errors.push('Please input Odometer');
-    }
-    if (e.target.liters.value === '') {
-      errors.push('Please input Liters');
-    }
-    if (e.target.total.value === '') {
-      errors.push('Please input Total Price');
-    }
-    if (errors.length > 0) {
-      addError(errors);
-    } else {
-      let fuelUpData = {
-        date: e.target.date.value,
-        odometer: +e.target.odometer.value,
-        station: e.target.station.value,
-        fuel: e.target.selectedFuel.value,
-        type: e.target.type.value,
-        liters: +e.target.liters.value,
-        total: +e.target.total.value,
-        price: +e.target.pricePerL.value,
-        full: e.target.fullTank.value,
-      };
-      getCarDetails(props.id)
-        .then((res) => {
+    getCarDetails(props.id)
+      .then((res) => {
+        if (e.target.odometer.value === '') {
+          errors.push('Please input Odometer');
+        }
+        if (e.target.odometer.value <= res.data()['last milage']) {
+          errors.push(
+            `The odometer value could not be less then previous record - ${
+              res.data()['last milage']
+            }`
+          );
+        }
+        if (
+          (res.data().fuel !== undefined &&
+            e.target.selectedFuel.value === 'Diesel' &&
+            res.data().fuel !== 'Diesel') ||
+          (res.data().fuel !== undefined &&
+            res.data().fuel === 'Diesel' &&
+            e.target.selectedFuel.value !== 'Diesel')
+        ) {
+          errors.push(
+            `Different fuel was used compared with previous fuel ups - ${
+              res.data().fuel
+            }`
+          );
+        }
+
+        if (e.target.liters.value === '') {
+          errors.push('Please input Liters');
+        }
+        if (e.target.total.value === '') {
+          errors.push('Please input Total Price');
+        }
+        if (errors.length > 0) {
+          addError(errors);
+        } else {
+          let fuelUpData = {
+            date: e.target.date.value,
+            odometer: +e.target.odometer.value,
+            station: e.target.station.value,
+            fuel: e.target.selectedFuel.value,
+            type: e.target.type.value,
+            liters: +e.target.liters.value,
+            total: +e.target.total.value,
+            price: +e.target.pricePerL.value,
+            full: e.target.fullTank.value === 'true',
+          };
+
           let oldFuelUps = [];
           if (res.data().hasOwnProperty('Fuel Ups')) {
             oldFuelUps = res.data()['Fuel Ups'];
+            let fullTankArr = oldFuelUps.map((fuelUp) => fuelUp.full);
+            let lastIndex = fullTankArr.lastIndexOf(true);
+            let totalsSinceLastFullTank = 0;
+            let litersSinceLastFullTank = 0;
+            if (lastIndex >= 0) {
+              let kmsSinceLastFullTank =
+                fuelUpData.odometer - oldFuelUps[lastIndex].odometer;
+              for (let i = lastIndex + 1; i < oldFuelUps.length; i++) {
+                totalsSinceLastFullTank += oldFuelUps[i].total;
+                litersSinceLastFullTank += oldFuelUps[i].liters;
+              }
+              totalsSinceLastFullTank += fuelUpData.total;
+              litersSinceLastFullTank += fuelUpData.liters;
+
+              fuelUpData = {
+                ...fuelUpData,
+                KMsSinceLast: kmsSinceLastFullTank,
+                totalsSinceLast: totalsSinceLastFullTank,
+                litersSinceLast: litersSinceLastFullTank,
+                lPerKM: (litersSinceLastFullTank / kmsSinceLastFullTank) * 100,
+                expnsePerKm: totalsSinceLastFullTank / kmsSinceLastFullTank,
+              };
+            }
             oldFuelUps.push(fuelUpData);
+            if (!res.data().fuel.includes(fuelUpData.fuel)) {
+              setCarField(props.id, {
+                fuel: [...res.data().fuel, fuelUpData.fuel],
+              })
+                .then((res) => {})
+                .catch((err) => addError(err));
+            }
             setCarField(props.id, { 'last milage': +fuelUpData.odometer })
               .then((res) => {})
               .catch((err) => addError(err));
@@ -149,7 +206,7 @@ function CarFuelUp(props) {
               .then((res) => {})
               .catch((err) => addError(err));
           } else {
-            setCarField(props.id, { fuel: fuelUpData.fuel })
+            setCarField(props.id, { fuel: [fuelUpData.fuel] })
               .then((res) => {})
               .catch((err) => addError(err));
             setCarField(props.id, { 'first milage': +fuelUpData.odometer })
@@ -161,16 +218,17 @@ function CarFuelUp(props) {
             setCarField(props.id, { 'kms tracked': +0 })
               .then((res) => {})
               .catch((err) => addError(err));
-            oldFuelUps = fuelUpData;
+            oldFuelUps.push(fuelUpData);
           }
+
           addFuelUp(props.id, oldFuelUps)
-            .then(() => {
-              console.log('Success');
+            .then((res) => {
+              history.push(`/car/${id}`);
             })
             .catch((err) => addError(err));
-        })
-        .catch((err) => addError(err));
-    }
+        }
+      })
+      .catch((err) => addError(err));
   }
 
   return (

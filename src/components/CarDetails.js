@@ -5,15 +5,22 @@ import { storage } from '../firebase/firebase';
 import './CarDetails.css';
 import CarDetailsBoxes from './CarDetailsBoxes';
 import CarFuelUp from './CarFuelUp';
+import useAPIError from '../hooks/useAPIError';
 
 function CarDetails() {
   let history = useHistory();
   const { id } = useParams();
   const [carData, setCarData] = useState({});
+  const { addError } = useAPIError();
+
   useEffect(() => {
-    getCarDetails(id).then((car) => {
-      setCarData(car.data());
-    });
+    getCarDetails(id)
+      .then((car) => {
+        setCarData(car.data());
+      })
+      .catch((err) => {
+        addError(err);
+      });
   }, [id]);
 
   function deleteCarHandler() {
@@ -41,17 +48,17 @@ function CarDetails() {
               {carData.make} - {carData.model}
             </h2>
           </div>
-          <div className="line"></div>
+          <div className="line"> </div>
           <div className="car-data-img-wrapper">
             <img src={carData.imageUrl} alt="Car" />
           </div>
-          <div className="line"></div>
+          <div className="line"> </div>
           <div className="car-data-buttons">
             <Link to={`/car/fuel-up/${id}`}>
-              <button>Add Fuel Up</button>
+              <button> Add Fuel Up </button>
             </Link>
             <Link to={`/car/edit/${id}`}>
-              <button>Edit</button>
+              <button> Edit </button>
             </Link>
             <button type="button" onClick={deleteCarHandler}>
               Delete
