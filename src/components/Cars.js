@@ -7,15 +7,16 @@ import './Cars.css';
 function Cars(props) {
   useEffect(() => {
     getAllCars().then((cars) => {
-      console.log('getAllCars');
-      props.setCarListHandler(
-        cars.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }))
-      );
+      if (!props.carList) {
+        props.setCarListHandler(
+          cars.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+        );
+      }
     });
-  }, []);
+  });
 
   return (
     <div className="cars">

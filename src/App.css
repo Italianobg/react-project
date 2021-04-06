@@ -75,3 +75,42 @@ footer {
 main .wrapper {
     flex-direction: column;
 }
+
+.errors {
+    color: rgb(196, 104, 104);
+    font-size: 14px;
+    margin-top: 40px;
+    text-align: center;
+    margin: 0 auto;
+    padding: 10px 20px;
+    background-color: white;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.errors p {
+    font-size: 16px;
+    margin: 10px 10px;
+    padding: 0;
+}
+
+.errors button {
+    color: rgb(76, 76, 76);
+    background-color: transparent;
+    padding: 5px;
+    margin: 0 auto;
+    width: 140px;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    border-bottom: 2px solid transparent;
+}
+
+.errors button:hover {
+    border-bottom: 2px solid black;
+    font-weight: bold;
+}
+
+.wrapper {
+    outline-style: none;
+}

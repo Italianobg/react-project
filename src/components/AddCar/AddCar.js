@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 import './AddCar.css';
 import * as carModels from '../../services/Cars/carModels';
 import loading from '../../images/loading.gif';
@@ -17,7 +17,7 @@ function AddCar(props) {
   const { id } = useParams();
   const [imageUrl, setImageUrl] = useState('');
   const [vehicles, setVehicles] = useState([]);
-  const [selectedType, setSelectedType] = useState('');
+  const [selectedType, setSelectedType] = useState('C');
   const [selectedMake, setSelectedMake] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [makes, setMakes] = useState([
@@ -30,29 +30,28 @@ function AddCar(props) {
   let errors = [];
   let history = useHistory();
 
-  useEffect(() => {
-    let isSubscribed = true;
-    if (id) {
-      getCarDetails(id).then((car) => {
-        setSelectedType(car.data().type);
-        setSelectedMake(car.data().make);
-        setSelectedModel(car.data().model);
-        setImageUrl(car.data().imageUrl);
-      });
-    }
-    carModels
-      .getAll()
-      .then((cars) => {
-        if (isSubscribed) {
-          setVehicles(cars.makes);
-        }
-      })
-      .catch((err) => errors.push(err));
+  let didMount = useRef(false);
 
-    return () => {
-      isSubscribed = false;
-    };
-  }, []);
+  useEffect(() => {
+    if (didMount.current) {
+      if (id) {
+        getCarDetails(id).then((car) => {
+          setSelectedType(car.data().type);
+          setSelectedMake(car.data().make);
+          setSelectedModel(car.data().model);
+          setImageUrl(car.data().imageUrl);
+        });
+      }
+    } else {
+      didMount.current = true;
+      carModels
+        .getAll()
+        .then((cars) => {
+          setVehicles(cars.makes);
+        })
+        .catch((err) => errors.push(err));
+    }
+  }, [selectedType, errors, id]);
 
   function setType(type) {
     setSelectedType(type);
@@ -130,12 +129,15 @@ function AddCar(props) {
           <CarImage setImage={setImage} imageUrl={imageUrl} />
         </Suspense>
         <CarType
+          id={id}
           vehicles={vehicles}
           selectedType={selectedType}
+          makes={makes}
           setType={setType}
           setAllMakes={setAllMakes}
         />
         <CarMake
+          id={id}
           makes={makes}
           selectedType={selectedType}
           selectedMake={selectedMake}
@@ -144,6 +146,7 @@ function AddCar(props) {
           setAllModels={setAllModels}
         />
         <CarModel
+          id={id}
           models={models}
           selectedMake={selectedMake}
           selectedModel={selectedModel}

@@ -1,21 +1,20 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 function CarType(props) {
   const carTypes = {
     C: 'Cars',
     B: 'Bikes',
   };
-  const didMount = useRef(false);
+
   useEffect(() => {
-    if (didMount.current) {
-      if (props.selectedType !== '') {
-        filterMakesByType(props.selectedType);
-      }
+    if (props.makes.length === 1 && props.vehicles.length > 1) {
+      filterMakesByType(props.selectedType);
     } else {
-      didMount.current = true;
-      props.setType('C');
+      if (props.makes < 2) {
+        props.setType('C');
+      }
     }
-  }, [props.vehicles, props.selectedType]);
+  });
 
   function filterMakesByType(type) {
     let makesSelected = props.vehicles
@@ -48,7 +47,7 @@ function CarType(props) {
       <select name="type" onChange={filterMakes} value={props.selectedType}>
         {Object.keys(carTypes).map((type, index) => {
           return (
-            <option key={index} value={type}>
+            <option key={index} value={props.selectedType}>
               {carTypes[type]}
             </option>
           );

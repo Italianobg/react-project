@@ -3,15 +3,13 @@ import React, { useEffect, useState } from 'react';
 import './CarImage.css';
 
 function CarImage(props) {
-  const [file, setFile] = useState(null);
   const [url, setURL] = useState('');
 
   useEffect(() => {
     setURL(props.imageUrl);
-  });
+  }, [props]);
 
   function handleImageChange(e) {
-    setFile(e.target.files[0]);
     storage
       .ref(`/images/${e.target.files[0].name}`)
       .put(e.target.files[0])
@@ -21,7 +19,6 @@ function CarImage(props) {
           .child(e.target.files[0].name)
           .getDownloadURL()
           .then((url) => {
-            setFile(null);
             setURL(url);
             props.setImage(url);
           });

@@ -11,6 +11,10 @@ function addCar(type, make, model, imageUrl) {
         })
 }
 
+function addFuelUp(id, data) {
+    return db.collection('cars').doc(id).set({ 'Fuel Ups': data }, { merge: true })
+}
+
 function editCar(type, make, model, imageUrl, id) {
     return db.collection('cars').doc(id)
         .update({
@@ -19,6 +23,10 @@ function editCar(type, make, model, imageUrl, id) {
             model,
             imageUrl,
         })
+}
+
+function setCarField(id, obj) {
+    return db.collection('cars').doc(id).set(obj, { merge: true })
 }
 
 function getAllCars() {
@@ -32,6 +40,8 @@ function getCarDetails(id) {
         .get()
 }
 
+
+
 function deleteCar(id) {
     return db.collection('cars')
         .doc(id)
@@ -40,7 +50,9 @@ function deleteCar(id) {
 
 export {
     addCar,
+    addFuelUp,
     editCar,
+    setCarField,
     getAllCars,
     getCarDetails,
     deleteCar

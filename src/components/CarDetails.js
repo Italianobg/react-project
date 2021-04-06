@@ -14,7 +14,7 @@ function CarDetails() {
     getCarDetails(id).then((car) => {
       setCarData(car.data());
     });
-  }, []);
+  }, [id]);
 
   function deleteCarHandler() {
     if (carData.imageUrl) {
@@ -47,10 +47,10 @@ function CarDetails() {
           </div>
           <div className="line"></div>
           <div className="car-data-buttons">
-            <Link to={`fuel-up/${id}`}>
+            <Link to={`/car/fuel-up/${id}`}>
               <button>Add Fuel Up</button>
             </Link>
-            <Link to={`edit/${id}`}>
+            <Link to={`/car/edit/${id}`}>
               <button>Edit</button>
             </Link>
             <button type="button" onClick={deleteCarHandler}>
@@ -62,7 +62,7 @@ function CarDetails() {
           <CarDetailsBoxes carData={carData} />
         </Route>
         <Route path="/car/fuel-up/:id" exact>
-          <CarFuelUp />
+          <CarFuelUp id={id} />
         </Route>
       </div>
     </div>

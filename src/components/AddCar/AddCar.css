@@ -143,15 +143,3 @@ input[type='file'] {
 .loading {
     max-height: 40px;
 }
-
-.errors {
-    color: rgb(196, 104, 104);
-    font-size: 14px;
-    margin-top: 5px;
-    text-align: center;
-}
-
-.errors p {
-    margin: 0;
-    padding: 0;
-}

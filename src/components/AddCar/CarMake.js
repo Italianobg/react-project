@@ -10,10 +10,9 @@ function CarMake(props) {
         props.models.length < 2
       ) {
         filterModelByMake(props.selectedMake);
-        console.log('Filter Models');
       }
     }
-  }, [props.makes, props.selectedMake, props.selectedType]);
+  });
 
   function filterModelByMake(make) {
     let modelsSelected = props.makes

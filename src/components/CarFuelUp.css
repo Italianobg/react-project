@@ -21,7 +21,7 @@
 .fuel-up div {
     width: 100%;
     display: flex;
-    height: 40px;
+    height: 35px;
     align-items: center;
 }
 
@@ -29,7 +29,7 @@
     flex-grow: 1;
     color: rgb(76, 76, 76);
     padding: 3px 0;
-    margin: 8px 0;
+    margin: 5px 0 5px 10px;
     border: none;
     outline-style: none;
     font-size: 17px;
@@ -43,7 +43,7 @@
 }
 
 .fuel-up div select {
-    margin: 0 40px;
+    margin: 5px 0px 5px 10px;
     color: rgb(76, 76, 76);
     outline-style: none;
     border: none;
@@ -68,6 +68,10 @@
     border-bottom: 2px solid rgb(76, 76, 76);
 }
 
+.fuel-up div:nth-of-type(9) {
+    margin-bottom: 12px;
+}
+
 .fuel-up button {
     color: rgb(76, 76, 76);
     background-color: transparent;
@@ -87,12 +91,19 @@
 
 .fuel-up .full-tank {
     display: flex;
-    margin-bottom: 15px;
 }
 
 .fuel-up .full-tank input {
     flex-grow: 0;
     margin: 0 10px;
+}
+
+.fuel-up ul {
+    text-decoration: none;
+}
+
+.fuel-up ul li {
+    list-style: none;
 }
 
 input::-webkit-outer-spin-button,

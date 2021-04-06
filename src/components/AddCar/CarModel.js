@@ -1,7 +1,6 @@
 function CarModel(props) {
   function selectModelHandler(e) {
     props.setModel(e.target.value);
-    console.log(e.target.value);
   }
 
   return (
