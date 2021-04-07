@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, useHistory, useParams } from 'react-router-dom';
 import { deleteCar, getCarDetails } from '../services/Cars/carFirebase';
-import { storage } from '../firebase/firebase';
+import { storage } from '../utils/firebase';
 import './CarDetails.css';
 import CarDetailsBoxes from './CarDetailsBoxes';
 import CarFuelUp from './CarFuelUp';

@@ -8,7 +8,16 @@ function Statistics(props) {
           <i className="fas fa-burn"> </i> <h4> Fuel Ups </h4>
         </div>
         <div>
-          <p> 40 </p>
+          <p>
+            {props.carList.filter((car) => car.hasOwnProperty('Fuel Ups'))
+              .length > 0
+              ? props.carList
+                  .filter((car) => car.hasOwnProperty('Fuel Ups'))
+                  .reduce((a, b) => ({
+                    'Fuel Ups': a['Fuel Ups'].length + b['Fuel Ups'].length,
+                  }))['Fuel Ups']
+              : ''}
+          </p>
         </div>
       </article>
       <article className="box">
@@ -16,7 +25,16 @@ function Statistics(props) {
           <i className="fas fa-road"> </i> <h4> Kilometers Recorded </h4>
         </div>
         <div>
-          <p> 260000 </p>
+          <p>
+            {props.carList.filter((car) => car.hasOwnProperty('KMsTracked'))
+              .length > 0
+              ? props.carList
+                  .filter((car) => car.hasOwnProperty('KMsTracked'))
+                  .reduce((a, b) => ({
+                    KMsTracked: a['KMsTracked'] + b['KMsTracked'],
+                  })).KMsTracked
+              : ''}
+          </p>
         </div>
       </article>
       <article className="box">

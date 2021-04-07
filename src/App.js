@@ -8,22 +8,22 @@ import Cars from './components/Cars';
 import AddCar from './components/AddCar/AddCar';
 import coverImg from './images/title.jfif';
 import './App.css';
-import { Route } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getAllCars } from './services/Cars/carFirebase';
 import CarDetails from './components/CarDetails';
-
 import APIErrorProvider from './provider/APIErrorProvider';
 import APIErrorNotification from './components/APIErrorNotification';
+import useAPIUser from './hooks/useAPIUser';
 
 function App() {
   const [carList, setCarList] = useState([]);
+  const { user } = useAPIUser();
 
   function setCarListHandler(carList) {
     setCarList(carList);
   }
   useEffect(() => {
-    console.log('getAllCars');
     getAllCars().then((cars) => {
       setCarList(
         cars.docs.map((doc) => ({
@@ -41,8 +41,10 @@ function App() {
         <header>
           <div className="wrapper header">
             <div className="title">
-              <i className="fas fa-gas-pump"> </i>
-              Fuel Tracker
+              <Link to="/">
+                <i className="fas fa-gas-pump"> </i>
+                Fuel Tracker
+              </Link>
             </div>
             <Navigation />
           </div>
@@ -63,15 +65,23 @@ function App() {
             <section className="main-content">
               <Route path={['/', '/login', '/register']} exact>
                 <Statistics carList={carList} />
-                <Features />
+                {user !== null && user.user !== null ? '' : <Features />}
               </Route>
               <Route path="/add-car" component={AddCar} exact />
               <Route path="/car/edit/:id" component={AddCar} exact />
             </section>
             <section>
-              <Route path={['/', '/login', '/register']} exact>
-                <Cars carList={carList} setCarListHandler={setCarListHandler} />
-              </Route>
+              {user !== null && user.user !== null ? (
+                <Route path={['/', '/login', '/register']} exact>
+                  <Cars
+                    carList={carList}
+                    setCarListHandler={setCarListHandler}
+                  />
+                </Route>
+              ) : (
+                ''
+              )}
+
               <Route path={['/car/:id', '/car/fuel-up/:id']} exact>
                 <CarDetails carList={carList} />
               </Route>

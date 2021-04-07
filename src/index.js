@@ -4,12 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import APIUserProvider from './provider/APIUserProvider';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
-    </BrowserRouter>{' '}
+      <APIUserProvider>
+        <App />
+      </APIUserProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

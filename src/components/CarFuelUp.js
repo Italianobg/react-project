@@ -120,10 +120,10 @@ function CarFuelUp(props) {
         if (e.target.odometer.value === '') {
           errors.push('Please input Odometer');
         }
-        if (e.target.odometer.value <= res.data()['last milage']) {
+        if (e.target.odometer.value <= res.data()['lastMilage']) {
           errors.push(
             `The odometer value could not be less then previous record - ${
-              res.data()['last milage']
+              res.data()['lastMilage']
             }`
           );
         }
@@ -197,11 +197,11 @@ function CarFuelUp(props) {
                 .then((res) => {})
                 .catch((err) => addError(err));
             }
-            setCarField(props.id, { 'last milage': +fuelUpData.odometer })
+            setCarField(props.id, { lastMilage: +fuelUpData.odometer })
               .then((res) => {})
               .catch((err) => addError(err));
             setCarField(props.id, {
-              'kms tracked': +fuelUpData.odometer - +res.data()['first milage'],
+              KMsTracked: +fuelUpData.odometer - +res.data()['firstMilage'],
             })
               .then((res) => {})
               .catch((err) => addError(err));
@@ -209,13 +209,13 @@ function CarFuelUp(props) {
             setCarField(props.id, { fuel: [fuelUpData.fuel] })
               .then((res) => {})
               .catch((err) => addError(err));
-            setCarField(props.id, { 'first milage': +fuelUpData.odometer })
+            setCarField(props.id, { firstMilage: +fuelUpData.odometer })
               .then((res) => {})
               .catch((err) => addError(err));
-            setCarField(props.id, { 'last milage': +fuelUpData.odometer })
+            setCarField(props.id, { lastMilate: +fuelUpData.odometer })
               .then((res) => {})
               .catch((err) => addError(err));
-            setCarField(props.id, { 'kms tracked': +0 })
+            setCarField(props.id, { KMsTracked: +0 })
               .then((res) => {})
               .catch((err) => addError(err));
             oldFuelUps.push(fuelUpData);

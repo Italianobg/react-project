@@ -34,13 +34,13 @@ function CarDetailsBoxes() {
             <div className="box">
               <h4>Odometer</h4>
               <p>
-                {carData['last milage'] ? `${carData['last milage']} km` : '-'}
+                {carData['lastMilage'] ? `${carData['lastMilage']} km` : '-'}
               </p>
             </div>
             <div className="box">
               <h4>KMs Tracked</h4>
               <p>
-                {carData['kms tracked'] ? `${carData['kms tracked']} km` : '-'}
+                {carData['KMsTracked'] ? `${carData['KMsTracked']} km` : '-'}
               </p>
             </div>
             <div className="box">

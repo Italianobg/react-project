@@ -1,4 +1,4 @@
-import { storage } from '../../firebase/firebase';
+import { storage } from '../../utils/firebase';
 import React, { useEffect, useState } from 'react';
 import './CarImage.css';
 

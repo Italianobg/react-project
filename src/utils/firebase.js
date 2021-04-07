@@ -1,4 +1,5 @@
 import firebase from 'firebase/app'
+import 'firebase/auth'
 import 'firebase/storage'
 import 'firebase/firestore'
 
@@ -22,13 +23,17 @@ var firebaseConfig = {
     measurementId: "G-WQ4BKYTPSP"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+}
 
+const auth = firebase.auth();
 const storage = firebase.storage();
 const firestore = firebase.firestore();
 
 export {
+    auth,
     storage,
     firestore,
     firebase as
