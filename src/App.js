@@ -4,17 +4,17 @@ import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import Statistics from './components/Statistics';
 import Features from './components/Features';
-import Cars from './components/Cars';
-import AddCar from './components/AddCar/AddCar';
+import Cars from './components/Cars/Cars';
+import AddEditCar from './components/Add-Edit Car/AddEditCar';
 import coverImg from './images/title.jfif';
-import './App.css';
 import { Link, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getAllCars } from './services/Cars/carFirebase';
-import CarDetails from './components/CarDetails';
+import CarDetails from './components/Cars/CarDetails';
 import APIErrorProvider from './provider/APIErrorProvider';
 import APIErrorNotification from './components/APIErrorNotification';
 import useAPIUser from './hooks/useAPIUser';
+import './App.css';
 
 function App() {
   const [carList, setCarList] = useState([]);
@@ -67,8 +67,8 @@ function App() {
                 <Statistics carList={carList} />
                 {user !== null && user.user !== null ? '' : <Features />}
               </Route>
-              <Route path="/add-car" component={AddCar} exact />
-              <Route path="/car/edit/:id" component={AddCar} exact />
+              <Route path="/add-car" component={AddEditCar} exact />
+              <Route path="/car/edit/:id" component={AddEditCar} exact />
             </section>
             <section>
               {user !== null && user.user !== null ? (
