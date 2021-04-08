@@ -1,5 +1,9 @@
 import { useHistory } from 'react-router';
 import useAPIError from '../../hooks/useAPIError';
+import {
+  getUsersCounter,
+  incrementUser,
+} from '../../services/User/userFirebase';
 import { auth } from '../../utils/firebase';
 import './Register.css';
 
@@ -14,6 +18,7 @@ function Register(props) {
     const password = e.target.password.value;
     const repeatPassword = e.target.repeatPassword.value;
     let errors = [];
+    let counter = '';
 
     if (email === '') {
       errors.push('Please specify email');
@@ -30,10 +35,24 @@ function Register(props) {
     if (errors.length > 0) {
       addError(errors);
     } else {
+      getUsersCounter()
+        .then((res) => {
+          counter = res.data().counter;
+        })
+        .catch((err) => {
+          addError(err.message);
+        });
+
       auth
         .createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          history.push('/');
+        .then(() => {
+          incrementUser({ counter: counter + 1 })
+            .then((res) => {
+              history.push('/');
+            })
+            .catch((err) => {
+              addError(err.message);
+            });
         })
         .catch((err) => {
           addError(err.message);

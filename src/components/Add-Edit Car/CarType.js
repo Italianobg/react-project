@@ -1,20 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function CarType(props) {
   const carTypes = {
     C: 'Cars',
     B: 'Bikes',
   };
+  const [type, setType] = useState(props.selectedType);
 
   useEffect(() => {
-    if (props.makes.length === 1 && props.vehicles.length > 1) {
-      filterMakesByType(props.selectedType);
-    } else {
-      if (props.makes < 2) {
-        props.setType('C');
-      }
+    if (type === undefined) {
+      setType('C');
+      props.setChangedTypeHandler('C');
     }
-  });
+
+    filterMakesByType(type);
+  }, [type, props.vehicles]);
 
   function filterMakesByType(type) {
     let makesSelected = props.vehicles
@@ -29,7 +29,8 @@ function CarType(props) {
   }
 
   function filterMakes(e) {
-    props.setType(e.target.value);
+    setType(e.target.value);
+    props.setChangedTypeHandler(e.target.value);
     let makesSelected = props.vehicles
       .filter((el) => {
         if (el['vehicleTypes'].includes(e.target.value)) {
@@ -43,11 +44,11 @@ function CarType(props) {
 
   return (
     <div>
-      <label className="type">Type:</label>
-      <select name="type" onChange={filterMakes} value={props.selectedType}>
+      <label className="type"> Type: </label>
+      <select name="type" onChange={filterMakes} value={type}>
         {Object.keys(carTypes).map((type, index) => {
           return (
-            <option key={index} value={props.selectedType}>
+            <option key={index} value={type}>
               {carTypes[type]}
             </option>
           );

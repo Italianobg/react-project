@@ -1,6 +1,23 @@
+import { useEffect, useState } from 'react';
+import useAPIError from '../hooks/useAPIError';
+import { getUsersCounter } from '../services/User/userFirebase';
 import './Statistics.css';
 
 function Statistics(props) {
+  const { addError } = useAPIError();
+  const [users, setUsers] = useState('');
+
+  useEffect(() => {
+    getUsersCounter()
+      .then((res) => {
+        setUsers(res.data().counter);
+        console.log('request');
+      })
+      .catch((err) => {
+        addError(err.message);
+      });
+  });
+
   return (
     <section className="statistics">
       <article className="box">
@@ -50,7 +67,7 @@ function Statistics(props) {
           <i className="fas fa-users"> </i> <h4> Users </h4>
         </div>
         <div>
-          <p> 2 </p>
+          <p> {users} </p>
         </div>
       </article>
     </section>

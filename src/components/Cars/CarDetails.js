@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, useHistory, useParams } from 'react-router-dom';
-import { deleteCar, getCarDetails } from '../services/Cars/carFirebase';
-import { storage } from '../utils/firebase';
+import { deleteCar, getCarDetails } from '../../services/Cars/carFirebase';
+import { storage } from '../../utils/firebase';
 import './CarDetails.css';
 import CarDetailsBoxes from './CarDetailsBoxes';
 import CarFuelUp from './CarFuelUp';
-import useAPIError from '../hooks/useAPIError';
+import useAPIError from '../../hooks/useAPIError';
 
 function CarDetails() {
   let history = useHistory();

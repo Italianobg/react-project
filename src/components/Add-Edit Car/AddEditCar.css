@@ -46,6 +46,11 @@
     flex-basis: 10%;
 }
 
+.selectCar .line {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
 .selectCar select {
     font-family: 'Arial';
     display: inline-block;

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import getGasStations from '../services/googleMapsGasStations.js';
+import getGasStations from '../../services/googleMapsGasStations.js';
 import {
   addFuelUp,
   getCarDetails,
   setCarField,
-} from '../services/Cars/carFirebase';
+} from '../../services/Cars/carFirebase';
 import './CarFuelUp.css';
-import useAPIError from '../hooks/useAPIError';
+import useAPIError from '../../hooks/useAPIError';
 import { useHistory, useParams } from 'react-router';
 
 const fuels = [

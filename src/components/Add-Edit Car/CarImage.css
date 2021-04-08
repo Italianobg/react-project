@@ -3,12 +3,7 @@
     flex-direction: column;
 }
 
-.car-image img {
-    max-height: 300px;
-    object-fit: contain;
-}
-
-.car-image button {
+.selectCar .car-image button {
     width: 100%;
     margin-top: 8px;
 }
