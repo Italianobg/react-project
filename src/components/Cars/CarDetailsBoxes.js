@@ -12,7 +12,6 @@ function CarDetailsBoxes() {
     getCarDetails(id)
       .then((car) => {
         setCarData(car.data());
-        console.log('execute');
       })
       .catch((err) => {
         addError(err);
@@ -53,17 +52,21 @@ function CarDetailsBoxes() {
               <h4>Avg Milage</h4>
               <p>
                 {carData['Fuel Ups'] &&
-                carData['Fuel Ups'].filter((fuelUp) =>
-                  fuelUp.hasOwnProperty('lPerKM')
+                carData['Fuel Ups'].filter(
+                  (fuelUp) =>
+                    fuelUp.hasOwnProperty('lPerKM') && fuelUp.full === true
                 ).length > 0
                   ? `${(
                       carData['Fuel Ups']
-                        .filter((fuelUp) => fuelUp.lPerKM)
+                        .filter(
+                          (fuelUp) => fuelUp.lPerKM && fuelUp.full === true
+                        )
                         .reduce((a, b) => ({
                           lPerKM: a.lPerKM + b.lPerKM,
                         })).lPerKM /
-                      carData['Fuel Ups'].filter((fuelUp) => fuelUp.lPerKM)
-                        .length
+                      carData['Fuel Ups'].filter(
+                        (fuelUp) => fuelUp.lPerKM && fuelUp.full === true
+                      ).length
                     ).toFixed(2)} L/100 km`
                   : '-'}
               </p>
@@ -72,14 +75,17 @@ function CarDetailsBoxes() {
               <h4>Worst Milage</h4>
               <p>
                 {carData['Fuel Ups'] &&
-                carData['Fuel Ups'].filter((fuelUp) =>
-                  fuelUp.hasOwnProperty('lPerKM')
+                carData['Fuel Ups'].filter(
+                  (fuelUp) =>
+                    fuelUp.hasOwnProperty('lPerKM') && fuelUp.full === true
                 ).length > 0
                   ? `${Math.max
                       .apply(
                         Math,
                         carData['Fuel Ups']
-                          .filter((fuelUp) => fuelUp.lPerKM)
+                          .filter(
+                            (fuelUp) => fuelUp.lPerKM && fuelUp.full === true
+                          )
                           .map((fuelUp) => fuelUp.lPerKM)
                       )
                       .toFixed(2)} L/100 km`
@@ -97,7 +103,9 @@ function CarDetailsBoxes() {
                       .apply(
                         Math,
                         carData['Fuel Ups']
-                          .filter((fuelUp) => fuelUp.lPerKM)
+                          .filter(
+                            (fuelUp) => fuelUp.lPerKM && fuelUp.full === true
+                          )
                           .map((fuelUp) => fuelUp.lPerKM)
                       )
                       .toFixed(2)} L/100 km`
@@ -125,17 +133,21 @@ function CarDetailsBoxes() {
               <h4>Average Price / Km</h4>
               <p>
                 {carData['Fuel Ups'] &&
-                carData['Fuel Ups'].filter((fuelUp) =>
-                  fuelUp.hasOwnProperty('expnsePerKm')
+                carData['Fuel Ups'].filter(
+                  (fuelUp) =>
+                    fuelUp.hasOwnProperty('expnsePerKm') && fuelUp.full === true
                 ).length > 0
                   ? `${(
                       carData['Fuel Ups']
-                        .filter((fuelUp) => fuelUp.expnsePerKm)
+                        .filter(
+                          (fuelUp) => fuelUp.expnsePerKm && fuelUp.full === true
+                        )
                         .reduce((a, b) => ({
                           expnsePerKm: a.expnsePerKm + b.expnsePerKm,
                         })).expnsePerKm /
-                      carData['Fuel Ups'].filter((fuelUp) => fuelUp.expnsePerKm)
-                        .length
+                      carData['Fuel Ups'].filter(
+                        (fuelUp) => fuelUp.expnsePerKm && fuelUp.full === true
+                      ).length
                     ).toFixed(3)}`
                   : '-'}
               </p>

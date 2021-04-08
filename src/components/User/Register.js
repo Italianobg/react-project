@@ -63,13 +63,22 @@ function Register(props) {
     <div className="wrapper wrapper-register">
       <div className="register">
         <form onSubmit={registerHandler}>
-          <input name="email" type="email" placeholder="EMAIL" />
-          <input name="password" type="password" placeholder="PASSWORD" />
-          <input
-            name="repeatPassword"
-            type="password"
-            placeholder="REPEAT PASSWORD"
-          />
+          <div className="input">
+            <i className="fas fa-envelope"></i>
+            <input name="email" type="email" placeholder="EMAIL" />
+          </div>
+          <div className="input">
+            <i className="fas fa-unlock-alt"></i>
+            <input name="password" type="password" placeholder="PASSWORD" />
+          </div>
+          <div className="input">
+            <i className="fas fa-unlock-alt"></i>
+            <input
+              name="repeatPassword"
+              type="password"
+              placeholder="REPEAT PASSWORD"
+            />
+          </div>
           <button type="submit"> Register </button>
         </form>
       </div>

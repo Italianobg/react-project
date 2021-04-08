@@ -38,8 +38,14 @@ function Login(props) {
     <div className="wrapper wrapper-login">
       <div className="login">
         <form onSubmit={onLoginFormSubmitHandler}>
-          <input type="email" name="email" placeholder="EMAIL" />
-          <input type="password" name="password" placeholder="PASSWORD" />
+          <div className="input">
+            <i className="fas fa-envelope"></i>
+            <input type="email" name="email" placeholder="EMAIL" />
+          </div>
+          <div className="input">
+            <i className="fas fa-unlock-alt"></i>
+            <input type="password" name="password" placeholder="PASSWORD" />
+          </div>
           <button type="submit">Login</button>
         </form>
       </div>

@@ -50,17 +50,18 @@ function CarFuelUp(props) {
         setPricePerL('');
       }
       if (!gasStations && position) {
-        getGasStations(
-          position.coords.latitude,
-          position.coords.longitude
-        ).then((res) => {
-          let names = [];
-          setGasStations(res.results);
-          res.results.map((gasStation) => {
-            return names.push(gasStation.name);
+        getGasStations(position.coords.latitude, position.coords.longitude)
+          .then((res) => {
+            let names = [];
+            setGasStations(res.results);
+            res.results.map((gasStation) => {
+              return names.push(gasStation.name);
+            });
+            setSuggestions(names);
+          })
+          .catch((err) => {
+            addError(err.message);
           });
-          setSuggestions(names);
-        });
       }
     } else {
       didMount.current = true;
@@ -120,6 +121,10 @@ function CarFuelUp(props) {
         if (e.target.odometer.value === '') {
           errors.push('Please input Odometer');
         }
+
+        if (+e.target.odometer.value < 0) {
+          errors.push('Odometer value can not be negative number');
+        }
         if (e.target.odometer.value <= res.data()['lastMilage']) {
           errors.push(
             `The odometer value could not be less then previous record - ${
@@ -145,8 +150,15 @@ function CarFuelUp(props) {
         if (e.target.liters.value === '') {
           errors.push('Please input Liters');
         }
+        if (+e.target.liters.value <= 0) {
+          errors.push('Liters cannot be negative');
+        }
         if (e.target.total.value === '') {
           errors.push('Please input Total Price');
+        }
+
+        if (+e.target.total.value <= 0) {
+          errors.push('Total price can not be negativa value');
         }
         if (errors.length > 0) {
           addError(errors);
@@ -212,7 +224,7 @@ function CarFuelUp(props) {
             setCarField(props.id, { firstMilage: +fuelUpData.odometer })
               .then((res) => {})
               .catch((err) => addError(err));
-            setCarField(props.id, { lastMilate: +fuelUpData.odometer })
+            setCarField(props.id, { lastMilage: +fuelUpData.odometer })
               .then((res) => {})
               .catch((err) => addError(err));
             setCarField(props.id, { KMsTracked: +0 })

@@ -21,7 +21,7 @@ function CarDetails() {
       .catch((err) => {
         addError(err);
       });
-  }, [id]);
+  }, [id, addError]);
 
   function deleteCarHandler() {
     if (carData.imageUrl) {
@@ -29,14 +29,16 @@ function CarDetails() {
         .refFromURL(carData.imageUrl)
         .delete()
         .then(() => {})
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          addError(err.message);
+        });
     }
     deleteCar(id)
       .then(() => {
         history.push('/');
       })
       .catch((err) => {
-        console.log(err);
+        addError(err.message);
       });
   }
   return (

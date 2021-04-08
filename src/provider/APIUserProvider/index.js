@@ -20,7 +20,6 @@ export default function APIUserProvider({ children }) {
 
   useEffect(() => {
     auth.onAuthStateChanged(addUser);
-    console.log('user');
   }, []);
   return (
     <APIUserContext.Provider value={contextValue}>

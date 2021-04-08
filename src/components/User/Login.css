@@ -19,22 +19,38 @@
     justify-content: space-between;
 }
 
-.login input {
+.input {
     margin: 5px;
-    border: none;
-    height: 25px;
+    padding: 2px;
     background-color: #ddebf2;
     color: rgb(76, 76, 76);
     text-align: center;
     font-size: 15px;
     outline: none;
+    display: flex;
 }
 
-.login input:hover::placeholder {
+.input:hover {
     color: black;
 }
 
-.login input::placeholder {
+.input i {
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 25px;
+}
+
+.input input {
+    border: none;
+    background-color: #ddebf2;
+    outline: none;
+}
+
+.input:hover::placeholder {
+    color: black;
+}
+
+.input::placeholder {
     color: rgb(76, 76, 76);
     font-weight: bold;
     text-align: center;

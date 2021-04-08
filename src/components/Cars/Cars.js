@@ -4,30 +4,35 @@ import { getAllCars } from '../../services/Cars/carFirebase';
 import CarCard from './CarCard';
 import useAPIUser from '../../hooks/useAPIUser';
 import './Cars.css';
+import useAPIError from '../../hooks/useAPIError';
 
 function Cars(props) {
   const { user } = useAPIUser();
+  const { addError } = useAPIError();
 
   useEffect(() => {
-    getAllCars().then((cars) => {
-      console.log('loop');
-      if (
-        !props.carList ||
-        props.carList !==
-          cars.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-      ) {
-        props.setCarListHandler(
-          cars.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-        );
-      }
-    });
-  }, []);
+    getAllCars()
+      .then((cars) => {
+        if (
+          !props.carList ||
+          props.carList !==
+            cars.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }))
+        ) {
+          props.setCarListHandler(
+            cars.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }))
+          );
+        }
+      })
+      .catch((err) => {
+        addError(err.message);
+      });
+  }, [addError, props.id]);
 
   return (
     <div className="cars">
@@ -48,7 +53,8 @@ function Cars(props) {
           })}
       </div>
 
-      {props.carList.length === 0 && <h4>No cars in your garage!</h4>}
+      {props.carList.filter((car) => car.userID === user.user.uid).length ===
+        0 && <h4>No cars in your garage!</h4>}
     </div>
   );
 }

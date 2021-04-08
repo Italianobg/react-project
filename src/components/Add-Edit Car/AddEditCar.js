@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, useRef } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import './AddEditCar.css';
 import * as carModels from '../../services/Cars/carModels';
 import loading from '../../images/loading.gif';
