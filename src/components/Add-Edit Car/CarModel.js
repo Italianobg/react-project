@@ -12,7 +12,7 @@ function CarModel(props) {
   }
 
   return (
-    <div>
+    <div data-testid="my-select-component">
       <label className="model">Model:</label>
       <select name="model" onChange={selectModelHandler} value={model}>
         {props.models.map((model, index) => {

@@ -5,7 +5,7 @@ import './Statistics.css';
 
 function Statistics(props) {
   const { addError } = useAPIError();
-  const [users, setUsers] = useState('');
+  const [users, setUsers] = useState();
 
   useEffect(() => {
     getUsersCounter()
@@ -72,7 +72,7 @@ function Statistics(props) {
           <div>
             <i className="fas fa-users"> </i> <h4> Users </h4>
           </div>
-          <div>
+          <div className="users">
             <p> {users > 0 ? users : ' - '} </p>
           </div>
         </article>
