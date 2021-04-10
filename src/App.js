@@ -82,7 +82,10 @@ function App() {
                 ''
               )}
 
-              <Route path={['/car/:id', '/car/fuel-up/:id']} exact>
+              <Route
+                path={['/car/:id', '/car/fuel-up/:id', '/car/fuel-ups/:id']}
+                exact
+              >
                 <CarDetails carList={carList} />
               </Route>
             </section>

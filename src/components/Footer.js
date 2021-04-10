@@ -9,13 +9,10 @@ function Footer() {
     <div className="wrapper">
       <div className="footer">
         <div>
-          <h4>
-            Fuel Tracker - we care about our customers, their trips and
-            expences.
-          </h4>
+          <h4>Fuel Tracker - log your trips and expences</h4>
         </div>
         <div className="footer-images">
-          <h4>Powered By:</h4>
+          <h4>powered by:</h4>
           <img alt="SoftUni" src={softUni} />
           <img alt="React" src={react} />
           <img alt="Firebase" src={firebase} />

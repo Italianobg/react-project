@@ -6,6 +6,7 @@ import './CarDetails.css';
 import CarDetailsBoxes from './CarDetailsBoxes';
 import CarFuelUp from './CarFuelUp';
 import useAPIError from '../../hooks/useAPIError';
+import CarFuelUps from './CarFuelUps';
 
 function CarDetails() {
   let history = useHistory();
@@ -46,25 +47,34 @@ function CarDetails() {
       <div className="car-data">
         <div className="car-data-details">
           <div className="car-make">
-            <h2>
-              {carData.make} - {carData.model}
-            </h2>
+            <Link to={`/car/${id}`}>
+              <h2>
+                {carData.make} - {carData.model}
+              </h2>
+            </Link>
           </div>
           <div className="line"> </div>
-          <div className="car-data-img-wrapper">
-            <img src={carData.imageUrl} alt="Car" />
-          </div>
+          <Link to={`/car/${id}`}>
+            <div className="car-data-img-wrapper">
+              <img src={carData.imageUrl} alt="Car" />
+            </div>
+          </Link>
           <div className="line"> </div>
           <div className="car-data-buttons">
             <Link to={`/car/fuel-up/${id}`}>
               <button> Add Fuel Up </button>
             </Link>
+            <Link to={`/car/fuel-ups/${id}`}>
+              <button> History </button>
+            </Link>
             <Link to={`/car/edit/${id}`}>
               <button> Edit </button>
             </Link>
-            <button type="button" onClick={deleteCarHandler}>
-              Delete
-            </button>
+            <a href="/">
+              <button type="button" onClick={deleteCarHandler}>
+                Delete
+              </button>
+            </a>
           </div>
         </div>
         <Route path="/car/:id" exact>
@@ -72,6 +82,9 @@ function CarDetails() {
         </Route>
         <Route path="/car/fuel-up/:id" exact>
           <CarFuelUp id={id} />
+        </Route>
+        <Route path="/car/fuel-ups/:id" exact>
+          <CarFuelUps id={id} carData={carData} />
         </Route>
       </div>
     </div>

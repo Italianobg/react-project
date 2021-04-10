@@ -33,7 +33,7 @@ function CarDetailsBoxes() {
             <div className="box">
               <h4>Odometer</h4>
               <p>
-                {carData['lastMilage'] ? `${carData['lastMilage']} km` : '-'}
+                {carData['lastMileage'] ? `${carData['lastMileage']} km` : '-'}
               </p>
             </div>
             <div className="box">
@@ -49,7 +49,7 @@ function CarDetailsBoxes() {
           </div>
           <div className="car-data-boxes">
             <div className="box">
-              <h4>Avg Milage</h4>
+              <h4>Avg Mileage</h4>
               <p>
                 {carData['Fuel Ups'] &&
                 carData['Fuel Ups'].filter(
@@ -72,7 +72,7 @@ function CarDetailsBoxes() {
               </p>
             </div>
             <div className="box">
-              <h4>Worst Milage</h4>
+              <h4>Worst Mileage</h4>
               <p>
                 {carData['Fuel Ups'] &&
                 carData['Fuel Ups'].filter(
@@ -93,11 +93,12 @@ function CarDetailsBoxes() {
               </p>
             </div>
             <div className="box">
-              <h4>Best Milage</h4>
+              <h4>Best Mileage</h4>
               <p>
                 {carData['Fuel Ups'] &&
-                carData['Fuel Ups'].filter((fuelUp) =>
-                  fuelUp.hasOwnProperty('lPerKM')
+                carData['Fuel Ups'].filter(
+                  (fuelUp) =>
+                    fuelUp.hasOwnProperty('lPerKM') && fuelUp.full === true
                 ).length > 0
                   ? `${Math.min
                       .apply(

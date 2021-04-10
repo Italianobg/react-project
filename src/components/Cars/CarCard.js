@@ -13,9 +13,9 @@ function CarCard(props) {
       </div>
       <div>
         <p>
-          {props.car['last milage']
-            ? `${props.car['last milage']} km`
-            : 'Time for Fuel Up!'}{' '}
+          {props.car.lastMileage
+            ? `${props.car.lastMileage} km - ${props.car.fuel}`
+            : 'Time for Fuel Up!'}
         </p>
       </div>
     </article>

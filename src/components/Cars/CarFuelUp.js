@@ -125,10 +125,10 @@ function CarFuelUp(props) {
         if (+e.target.odometer.value < 0) {
           errors.push('Odometer value can not be negative number');
         }
-        if (e.target.odometer.value <= res.data()['lastMilage']) {
+        if (e.target.odometer.value <= res.data()['lastMileage']) {
           errors.push(
             `The odometer value could not be less then previous record - ${
-              res.data()['lastMilage']
+              res.data()['lastMileage']
             }`
           );
         }
@@ -209,11 +209,11 @@ function CarFuelUp(props) {
                 .then((res) => {})
                 .catch((err) => addError(err));
             }
-            setCarField(props.id, { lastMilage: +fuelUpData.odometer })
+            setCarField(props.id, { lastMileage: +fuelUpData.odometer })
               .then((res) => {})
               .catch((err) => addError(err));
             setCarField(props.id, {
-              KMsTracked: +fuelUpData.odometer - +res.data()['firstMilage'],
+              KMsTracked: +fuelUpData.odometer - +res.data()['firstMileage'],
             })
               .then((res) => {})
               .catch((err) => addError(err));
@@ -221,10 +221,10 @@ function CarFuelUp(props) {
             setCarField(props.id, { fuel: [fuelUpData.fuel] })
               .then((res) => {})
               .catch((err) => addError(err));
-            setCarField(props.id, { firstMilage: +fuelUpData.odometer })
+            setCarField(props.id, { firstMileage: +fuelUpData.odometer })
               .then((res) => {})
               .catch((err) => addError(err));
-            setCarField(props.id, { lastMilage: +fuelUpData.odometer })
+            setCarField(props.id, { lastMileage: +fuelUpData.odometer })
               .then((res) => {})
               .catch((err) => addError(err));
             setCarField(props.id, { KMsTracked: +0 })
@@ -260,6 +260,7 @@ function CarFuelUp(props) {
           <input
             name="station"
             type="text"
+            autocomplete="off"
             onChange={setGasStationOnChange}
             onFocus={focusHandler}
             onBlur={blurHandler}
@@ -272,6 +273,7 @@ function CarFuelUp(props) {
               if (name.toLowerCase().includes(gasStation.toLowerCase())) {
                 return (
                   <li
+                    className="suggestions"
                     name="suggestions"
                     key={index}
                     value={name}

@@ -1,6 +1,12 @@
 .footer {
     display: flex;
+    width: 100%;
     align-items: center;
+    justify-content: space-around;
+}
+
+.footer h4 {
+    letter-spacing: 1px;
 }
 
 .footer div {
