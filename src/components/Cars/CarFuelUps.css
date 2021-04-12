@@ -67,3 +67,7 @@
     cursor: pointer;
     font-weight: bold;
 }
+
+.fuel-ups a {
+    color: rgb(76, 76, 76);
+}

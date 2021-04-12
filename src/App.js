@@ -86,7 +86,7 @@ function App() {
                 path={['/car/:id', '/car/fuel-up/:id', '/car/fuel-ups/:id']}
                 exact
               >
-                <CarDetails carList={carList} />
+                <CarDetails />
               </Route>
             </section>
           </div>

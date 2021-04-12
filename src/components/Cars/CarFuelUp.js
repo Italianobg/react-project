@@ -235,6 +235,7 @@ function CarFuelUp(props) {
 
           addFuelUp(props.id, oldFuelUps)
             .then((res) => {
+              props.fuelUpToggleHandler(true);
               history.push(`/car/${id}`);
             })
             .catch((err) => addError(err));

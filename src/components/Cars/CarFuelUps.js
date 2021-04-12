@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom';
 import './CarFuelUps.css';
 
 function CarFuelUps(props) {
+  console.log(props.carData['Fuel Ups']);
   return (
     <div className="car-data-wrapper fuel-up-wrapper">
       <h2>Fuel Ups</h2>
@@ -35,7 +37,13 @@ function CarFuelUps(props) {
                     )}
                   </span>
                   <span>
-                    <i class="far fa-edit"></i>
+                    <Link
+                      to={`/car/fuel-ups/${props.id}/edit/${props.carData[
+                        'Fuel Ups'
+                      ].indexOf(carData)}`}
+                    >
+                      <i class="far fa-edit"></i>
+                    </Link>
                   </span>
                 </p>
               );
