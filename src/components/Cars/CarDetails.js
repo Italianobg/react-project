@@ -10,7 +10,7 @@ import CarFuelUps from './CarFuelUps';
 
 function CarDetails() {
   let history = useHistory();
-  const { id } = useParams();
+  const { id, number } = useParams();
   const [carData, setCarData] = useState({});
   const [fuelUpToggle, setFuelUpToggle] = useState(true);
   const { addError } = useAPIError();
@@ -94,6 +94,9 @@ function CarDetails() {
         </Route>
         <Route path="/car/fuel-ups/:id" exact>
           <CarFuelUps id={id} carData={carData} />
+        </Route>
+        <Route path="/car/fuel-ups/:id/edit/:number" exact>
+          <CarFuelUp id={id} number={number} carData={carData} />
         </Route>
       </div>
     </div>

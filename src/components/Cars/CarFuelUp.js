@@ -17,6 +17,7 @@ const fuels = [
 ];
 
 function CarFuelUp(props) {
+  console.log(props);
   let someDate = new Date();
   someDate.setDate(someDate.getDate());
   let date = someDate.toISOString().substr(0, 10);
@@ -261,7 +262,7 @@ function CarFuelUp(props) {
           <input
             name="station"
             type="text"
-            autocomplete="off"
+            autoComplete="off"
             onChange={setGasStationOnChange}
             onFocus={focusHandler}
             onBlur={blurHandler}
@@ -361,7 +362,11 @@ function CarFuelUp(props) {
           </div>
         </div>
         <div className="line"></div>
-        <button type="submit">Add Fuel Up</button>
+        {props.number ? (
+          <button type="submit">Edit Fuel Up</button>
+        ) : (
+          <button type="submit">Add Fuel Up</button>
+        )}
       </form>
     </div>
   );
