@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllCars } from '../../services/Cars/carFirebase';
+import { getAllCars } from '../../../services/Cars/carFirebase';
 import CarCard from './CarCard';
-import useAPIUser from '../../hooks/useAPIUser';
+import useAPIUser from '../../../hooks/useAPIUser';
 import './Cars.css';
-import useAPIError from '../../hooks/useAPIError';
+import useAPIError from '../../../hooks/useAPIError';
 
 function Cars(props) {
   const { user } = useAPIUser();

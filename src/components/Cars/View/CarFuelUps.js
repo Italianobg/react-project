@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import './CarFuelUps.css';
 
 function CarFuelUps(props) {
-  console.log(props.carData['Fuel Ups']);
   return (
     <div className="car-data-wrapper fuel-up-wrapper">
       <h2>Fuel Ups</h2>

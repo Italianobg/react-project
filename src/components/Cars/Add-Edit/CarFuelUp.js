@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import getGasStations from '../../services/googleMapsGasStations.js';
+import getGasStations from '../../../services/googleMapsGasStations.js';
 import {
   addFuelUp,
   getCarDetails,
   setCarField,
-} from '../../services/Cars/carFirebase';
+} from '../../../services/Cars/carFirebase';
 import './CarFuelUp.css';
-import useAPIError from '../../hooks/useAPIError';
+import useAPIError from '../../../hooks/useAPIError';
 import { useHistory, useParams } from 'react-router';
+import GasStation from './GasStation.js';
 
 const fuels = [
   { name: 'Petrol', types: ['A95', 'A98', 'A100'] },
@@ -17,7 +18,6 @@ const fuels = [
 ];
 
 function CarFuelUp(props) {
-  console.log(props);
   let someDate = new Date();
   someDate.setDate(someDate.getDate());
   let date = someDate.toISOString().substr(0, 10);
@@ -43,6 +43,23 @@ function CarFuelUp(props) {
   let history = useHistory();
 
   useEffect(() => {
+    if (!gasStations && position['coords']) {
+      getGasStations(position.coords.latitude, position.coords.longitude)
+        .then((res) => {
+          let names = [];
+          setGasStations(res.results);
+          res.results.map((gasStation) => {
+            return names.push(gasStation.name);
+          });
+          setSuggestions(names);
+        })
+        .catch((err) => {
+          addError(err.message);
+        });
+    }
+  }, [position, addError, gasStations]);
+
+  useEffect(() => {
     if (didMount.current) {
       setTypes(selectedFuel.types);
       if (liters && total) {
@@ -50,37 +67,13 @@ function CarFuelUp(props) {
       } else {
         setPricePerL('');
       }
-      if (!gasStations && position) {
-        getGasStations(position.coords.latitude, position.coords.longitude)
-          .then((res) => {
-            let names = [];
-            setGasStations(res.results);
-            res.results.map((gasStation) => {
-              return names.push(gasStation.name);
-            });
-            setSuggestions(names);
-          })
-          .catch((err) => {
-            addError(err.message);
-          });
-      }
     } else {
       didMount.current = true;
       navigator.geolocation.getCurrentPosition(function (position) {
         setPosition(position);
       });
     }
-  }, [
-    types,
-    selectedFuel,
-    liters,
-    total,
-    position,
-    suggestions,
-    gasStations,
-    fullTank,
-    addError,
-  ]);
+  }, [types, selectedFuel, liters, total, suggestions, fullTank, addError]);
 
   function selectFuel(e) {
     setSelectedFuel(fuels.find((fuel) => fuel.name === e.target.value));
@@ -95,6 +88,14 @@ function CarFuelUp(props) {
   }
   function setGasStationOnChange(e) {
     setGasStation(e.target.value);
+  }
+
+  function setSuggestionsHandler(suggestions) {
+    setSuggestions(suggestions);
+  }
+
+  function setGasStationsHandler(gasStations) {
+    setGasStations(gasStations);
   }
 
   function setGasStationHandler(e) {
@@ -257,41 +258,21 @@ function CarFuelUp(props) {
           Odometer:
           <input name="odometer" type="number" />
         </div>
-        <div>
-          Gas Station:
-          <input
-            name="station"
-            type="text"
-            autoComplete="off"
-            onChange={setGasStationOnChange}
-            onFocus={focusHandler}
-            onBlur={blurHandler}
-            value={gasStation}
-          />
-        </div>
-        {suggestions && focus ? (
-          <ul>
-            {suggestions.map((name, index) => {
-              if (name.toLowerCase().includes(gasStation.toLowerCase())) {
-                return (
-                  <li
-                    className="suggestions"
-                    name="suggestions"
-                    key={index}
-                    value={name}
-                    onClick={setGasStationHandler}
-                  >
-                    {name}
-                  </li>
-                );
-              } else {
-                return '';
-              }
-            })}
-          </ul>
-        ) : (
-          ''
-        )}
+
+        <GasStation
+          position={position}
+          gasStation={gasStation}
+          gasStations={gasStations}
+          suggestions={suggestions}
+          focus={focus}
+          setSuggestions={setSuggestionsHandler}
+          setGasStations={setGasStationsHandler}
+          focusHandler={focusHandler}
+          blurHandler={blurHandler}
+          setGasStationOnChange={setGasStationOnChange}
+          setGasStationHandler={setGasStationHandler}
+        ></GasStation>
+
         <div>
           Fuel:
           <select

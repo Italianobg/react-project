@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import useAPIError from '../../hooks/useAPIError';
-import { getCarDetails } from '../../services/Cars/carFirebase';
+import useAPIError from '../../../hooks/useAPIError';
+import { getCarDetails } from '../../../services/Cars/carFirebase';
 
 function CarDetailsBoxes() {
   const [carData, setCarData] = useState({});
