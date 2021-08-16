@@ -21,7 +21,7 @@ function CarFuelUps(props) {
             </h4>
             {props.carData['Fuel Ups'].map((carData) => {
               return (
-                <p>
+                <p key={carData.odometer}>
                   <span>{carData.date}</span>
                   <span>{carData.fuel}</span>
                   <span>{carData.liters}</span>
@@ -30,9 +30,9 @@ function CarFuelUps(props) {
                   <span>{carData.odometer}</span>
                   <span>
                     {carData.full ? (
-                      <i class="fas fa-check"></i>
+                      <i className="fas fa-check"></i>
                     ) : (
-                      <i class="fas fa-times"></i>
+                      <i className="fas fa-times"></i>
                     )}
                   </span>
                   <span>
@@ -41,7 +41,7 @@ function CarFuelUps(props) {
                         'Fuel Ups'
                       ].indexOf(carData)}`}
                     >
-                      <i class="far fa-edit"></i>
+                      <i className="far fa-edit"></i>
                     </Link>
                   </span>
                 </p>

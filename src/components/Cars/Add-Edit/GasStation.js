@@ -8,7 +8,6 @@ function GasStation(props) {
   const { position, gasStations } = props;
 
   useEffect(() => {
-    console.log('Render');
     if (!gasStations && position && position['coords'] !== undefined) {
       getGasStations(position.coords.latitude, position.coords.longitude)
         .then((res) => {
@@ -46,20 +45,27 @@ function GasStation(props) {
           onChange={props.setGasStationOnChange}
           onFocus={focusHandler}
           onBlur={blurHandler}
-          value={props.gasStation}
+          value={props.inputsData.station}
         />
       </div>
       {props.suggestions && focus ? (
         <ul>
           {props.suggestions.map((name, index) => {
-            if (name.toLowerCase().includes(props.gasStation.toLowerCase())) {
+            if (
+              name
+                .toLowerCase()
+                .includes(
+                  props.inputsData.station.toLowerCase() ||
+                    props.inputsData.station
+                )
+            ) {
               return (
                 <li
                   className="suggestions"
                   name="suggestions"
                   key={index}
                   value={name}
-                  onClick={props.setGasStationHandler}
+                  onClick={props.setGasStationOnChange}
                 >
                   {name}
                 </li>

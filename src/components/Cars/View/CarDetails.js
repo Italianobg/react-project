@@ -12,21 +12,17 @@ function CarDetails() {
   let history = useHistory();
   const { id, number } = useParams();
   const [carData, setCarData] = useState({});
-  const [fuelUpToggle, setFuelUpToggle] = useState(true);
   const { addError } = useAPIError();
 
   useEffect(() => {
-    if (fuelUpToggle) {
-      getCarDetails(id)
-        .then((car) => {
-          setCarData(car.data());
-          setFuelUpToggle(false);
-        })
-        .catch((err) => {
-          addError(err);
-        });
-    }
-  }, [id, addError, fuelUpToggle]);
+    getCarDetails(id)
+      .then((car) => {
+        setCarData(car.data());
+      })
+      .catch((err) => {
+        addError(err);
+      });
+  }, [id, addError]);
 
   function deleteCarHandler() {
     if (carData.imageUrl) {
@@ -45,10 +41,6 @@ function CarDetails() {
       .catch((err) => {
         addError(err.message);
       });
-  }
-
-  function fuelUpToggleHandler(status) {
-    setFuelUpToggle(status);
   }
 
   return (
@@ -90,7 +82,7 @@ function CarDetails() {
           <CarDetailsBoxes carData={carData} />
         </Route>
         <Route path="/car/fuel-up/:id" exact>
-          <CarFuelUp id={id} fuelUpToggleHandler={fuelUpToggleHandler} />
+          <CarFuelUp id={id} carData={carData} />
         </Route>
         <Route path="/car/fuel-ups/:id" exact>
           <CarFuelUps id={id} carData={carData} />

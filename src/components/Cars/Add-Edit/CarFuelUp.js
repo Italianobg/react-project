@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import getGasStations from '../../../services/googleMapsGasStations.js';
-import {
-  addFuelUp,
-  getCarDetails,
-  setCarField,
-} from '../../../services/Cars/carFirebase';
+import { fuelUp, setCarField } from '../../../services/Cars/carFirebase';
 import './CarFuelUp.css';
 import useAPIError from '../../../hooks/useAPIError';
 import { useHistory, useParams } from 'react-router';
 import GasStation from './GasStation.js';
+import Fuel from './Fuel.js';
+import FuelUpData from './FuelUpData.js';
+import { validation } from '../../../utils/validation';
 
 const fuels = [
+  { name: 'Select Fuel', types: ['Select Type'] },
   { name: 'Petrol', types: ['A95', 'A98', 'A100'] },
   { name: 'Diesel', types: ['Diesel', 'Diesel+', 'Diesel MaxMotion'] },
   { name: 'LPG', types: ['LPG'] },
@@ -23,24 +23,30 @@ function CarFuelUp(props) {
   let date = someDate.toISOString().substr(0, 10);
 
   const [selectedFuel, setSelectedFuel] = useState({
-    name: 'Petrol',
-    types: ['A95', 'A98', 'A100'],
+    name: 'Select Fuel',
+    types: ['Select Type'],
   });
-  const [types, setTypes] = useState(['A95', 'A98', 'A100']);
-  const [liters, setLiters] = useState('');
-  const [total, setTotal] = useState('');
-  const [pricePerL, setPricePerL] = useState('');
+  const [types, setTypes] = useState(['Select Type']);
   const [position, setPosition] = useState({});
-  const [gasStation, setGasStation] = useState('');
   const [gasStations, setGasStations] = useState('');
   const [suggestions, setSuggestions] = useState('');
-  const [focus, setFocus] = useState(false);
-  const [fullTank, setFullTank] = useState(false);
+  const [editSelected, setEditSelected] = useState();
   const didMount = useRef(false);
   const { addError } = useAPIError();
   const { id } = useParams();
-  let errors = [];
   let history = useHistory();
+
+  const [inputsData, setInputsData] = useState({
+    date: '',
+    odometer: '',
+    station: '',
+    fuel: '',
+    type: '',
+    liters: '',
+    total: '',
+    price: '',
+    full: false,
+  });
 
   useEffect(() => {
     if (!gasStations && position['coords']) {
@@ -61,33 +67,81 @@ function CarFuelUp(props) {
 
   useEffect(() => {
     if (didMount.current) {
-      setTypes(selectedFuel.types);
-      if (liters && total) {
-        setPricePerL((total / liters).toFixed(2));
-      } else {
-        setPricePerL('');
-      }
     } else {
       didMount.current = true;
       navigator.geolocation.getCurrentPosition(function (position) {
         setPosition(position);
       });
     }
-  }, [types, selectedFuel, liters, total, suggestions, fullTank, addError]);
+  }, [types, selectedFuel, suggestions, addError]);
 
+  useEffect(() => {
+    if (props.number >= 0 && Object.keys(props.carData).length > 0) {
+      setEditSelected(true);
+      setInputsData({ ...props.carData['Fuel Ups'][props.number] });
+      setSelectedFuel(
+        fuels.find(
+          (fuel) => fuel.name === props.carData['Fuel Ups'][props.number].fuel
+        )
+      );
+    } else {
+      setEditSelected(false);
+      setInputsData({
+        ...inputsData,
+        date,
+        odometer: props.carData.lastMileage,
+      });
+    }
+  }, [props.carData, date, props.number]);
+
+  function dateOnChange(e) {
+    setInputsData({
+      ...inputsData,
+      date: e.target.value,
+    });
+  }
+
+  function odometerOnChange(e) {
+    setInputsData({
+      ...inputsData,
+      odometer: +e.target.value || '',
+    });
+  }
   function selectFuel(e) {
+    setInputsData({
+      ...inputsData,
+      fuel: e.target.value,
+    });
     setSelectedFuel(fuels.find((fuel) => fuel.name === e.target.value));
   }
 
+  function selectType(e) {
+    setInputsData({
+      ...inputsData,
+      type: e.target.value,
+    });
+  }
+
   function litersHandler(e) {
-    setLiters(e.target.value);
+    setInputsData({
+      ...inputsData,
+      liters: +e.target.value || '',
+      price: +(inputsData.total / e.target.value).toFixed(3),
+    });
   }
 
   function totalPriceHandler(e) {
-    setTotal(e.target.value);
+    setInputsData({
+      ...inputsData,
+      total: +e.target.value || '',
+      price: +(e.target.value / inputsData.liters).toFixed(3),
+    });
   }
   function setGasStationOnChange(e) {
-    setGasStation(e.target.value);
+    setInputsData({
+      ...inputsData,
+      station: e.target.value || e.target.innerHTML,
+    });
   }
 
   function setSuggestionsHandler(suggestions) {
@@ -98,152 +152,89 @@ function CarFuelUp(props) {
     setGasStations(gasStations);
   }
 
-  function setGasStationHandler(e) {
-    setGasStation(e.target.innerHTML);
-  }
-
-  function focusHandler(e) {
-    setFocus(true);
-  }
-
-  function blurHandler(e) {
-    setTimeout(function () {
-      setFocus(false);
-    }, 500);
-  }
-
   function toggleFullTankCheckBox(e) {
-    setFullTank((oldState) => !oldState);
+    setInputsData({
+      ...inputsData,
+      full: e.target.checked,
+    });
+  }
+
+  function mainCarDataEdit(carData, editSelected, index) {
+    if (editSelected) {
+      if (index === 0) {
+        carData.firstMileage = inputsData.odometer;
+      }
+      if (index === carData['Fuel Ups'].length - 1) {
+        carData.lastMileage = inputsData.odometer;
+      }
+    } else {
+      if (!carData.hasOwnProperty('Fuel Ups')) {
+        carData.firstMileage = inputsData.odometer;
+      }
+      carData.lastMileage = inputsData.odometer;
+    }
+    carData.KMsTracked = carData.lastMileage - carData.firstMileage;
+    return carData;
+  }
+
+  function fuelUpCarDataEdit(carData, editSelected, index) {
+    if (editSelected) {
+      carData['Fuel Ups'][index] = inputsData;
+    } else {
+      carData['Fuel Ups'].push(inputsData);
+    }
+
+    return carData;
   }
 
   function addFuelUpHandler(e) {
     e.preventDefault();
-    getCarDetails(props.id)
-      .then((res) => {
-        if (e.target.odometer.value === '') {
-          errors.push('Please input Odometer');
-        }
+    let carData = { ...props.carData };
+    let errors = validation(props.carData, e, editSelected, props.number);
+    if (errors.length > 0) {
+      addError(errors);
+    } else {
+      mainCarDataEdit(carData, editSelected, props.number);
+      fuelUpCarDataEdit(carData, editSelected, props.number);
 
-        if (+e.target.odometer.value < 0) {
-          errors.push('Odometer value can not be negative number');
-        }
-        if (e.target.odometer.value <= res.data()['lastMileage']) {
-          errors.push(
-            `The odometer value could not be less then previous record - ${
-              res.data()['lastMileage']
-            }`
-          );
-        }
-        if (
-          (res.data().fuel !== undefined &&
-            e.target.selectedFuel.value === 'Diesel' &&
-            res.data().fuel !== 'Diesel') ||
-          (res.data().fuel !== undefined &&
-            res.data().fuel === 'Diesel' &&
-            e.target.selectedFuel.value !== 'Diesel')
-        ) {
-          errors.push(
-            `Different fuel was used compared with previous fuel ups - ${
-              res.data().fuel
-            }`
-          );
-        }
+      fuelUp(props.id, carData)
+        .then((res) => {
+          // props.fuelUpToggleHandler(true);
+          history.push(`/car/${id}`);
+        })
+        .catch((err) => addError(err));
+    }
 
-        if (e.target.liters.value === '') {
-          errors.push('Please input Liters');
-        }
-        if (+e.target.liters.value <= 0) {
-          errors.push('Liters cannot be negative');
-        }
-        if (e.target.total.value === '') {
-          errors.push('Please input Total Price');
-        }
-
-        if (+e.target.total.value <= 0) {
-          errors.push('Total price can not be negativa value');
-        }
-        if (errors.length > 0) {
-          addError(errors);
-        } else {
-          let fuelUpData = {
-            date: e.target.date.value,
-            odometer: +e.target.odometer.value,
-            station: e.target.station.value,
-            fuel: e.target.selectedFuel.value,
-            type: e.target.type.value,
-            liters: +e.target.liters.value,
-            total: +e.target.total.value,
-            price: +e.target.pricePerL.value,
-            full: e.target.fullTank.value === 'true',
-          };
-
-          let oldFuelUps = [];
-          if (res.data().hasOwnProperty('Fuel Ups')) {
-            oldFuelUps = res.data()['Fuel Ups'];
-            let fullTankArr = oldFuelUps.map((fuelUp) => fuelUp.full);
-            let lastIndex = fullTankArr.lastIndexOf(true);
-            let totalsSinceLastFullTank = 0;
-            let litersSinceLastFullTank = 0;
-            if (lastIndex >= 0) {
-              let kmsSinceLastFullTank =
-                fuelUpData.odometer - oldFuelUps[lastIndex].odometer;
-              for (let i = lastIndex + 1; i < oldFuelUps.length; i++) {
-                totalsSinceLastFullTank += oldFuelUps[i].total;
-                litersSinceLastFullTank += oldFuelUps[i].liters;
-              }
-              totalsSinceLastFullTank += fuelUpData.total;
-              litersSinceLastFullTank += fuelUpData.liters;
-
-              fuelUpData = {
-                ...fuelUpData,
-                KMsSinceLast: kmsSinceLastFullTank,
-                totalsSinceLast: totalsSinceLastFullTank,
-                litersSinceLast: litersSinceLastFullTank,
-                lPerKM: (litersSinceLastFullTank / kmsSinceLastFullTank) * 100,
-                expnsePerKm: totalsSinceLastFullTank / kmsSinceLastFullTank,
-              };
-            }
-            oldFuelUps.push(fuelUpData);
-            if (!res.data().fuel.includes(fuelUpData.fuel)) {
-              setCarField(props.id, {
-                fuel: [...res.data().fuel, fuelUpData.fuel],
-              })
-                .then((res) => {})
-                .catch((err) => addError(err));
-            }
-            setCarField(props.id, { lastMileage: +fuelUpData.odometer })
-              .then((res) => {})
-              .catch((err) => addError(err));
-            setCarField(props.id, {
-              KMsTracked: +fuelUpData.odometer - +res.data()['firstMileage'],
-            })
-              .then((res) => {})
-              .catch((err) => addError(err));
-          } else {
-            setCarField(props.id, { fuel: [fuelUpData.fuel] })
-              .then((res) => {})
-              .catch((err) => addError(err));
-            setCarField(props.id, { firstMileage: +fuelUpData.odometer })
-              .then((res) => {})
-              .catch((err) => addError(err));
-            setCarField(props.id, { lastMileage: +fuelUpData.odometer })
-              .then((res) => {})
-              .catch((err) => addError(err));
-            setCarField(props.id, { KMsTracked: +0 })
-              .then((res) => {})
-              .catch((err) => addError(err));
-            oldFuelUps.push(fuelUpData);
-          }
-
-          addFuelUp(props.id, oldFuelUps)
-            .then((res) => {
-              props.fuelUpToggleHandler(true);
-              history.push(`/car/${id}`);
-            })
-            .catch((err) => addError(err));
-        }
-      })
-      .catch((err) => addError(err));
+    //   if (!props.carData.fuel.includes(fuelUpData.fuel)) {
+    //     setCarField(props.id, {
+    //       fuel: [...props.carData.fuel, fuelUpData.fuel],
+    //     })
+    //       .then((res) => {})
+    //       .catch((err) => addError(err));
+    //   }
+    //   setCarField(props.id, { lastMileage: +fuelUpData.odometer })
+    //     .then((res) => {})
+    //     .catch((err) => addError(err));
+    //   setCarField(props.id, {
+    //     KMsTracked: +fuelUpData.odometer - +props.carData['firstMileage'],
+    //   })
+    //     .then((res) => {})
+    //     .catch((err) => addError(err));
+    // } else {
+    //   setCarField(props.id, { fuel: [fuelUpData.fuel] })
+    //     .then((res) => {})
+    //     .catch((err) => addError(err));
+    //   setCarField(props.id, { firstMileage: +fuelUpData.odometer })
+    //     .then((res) => {})
+    //     .catch((err) => addError(err));
+    //   setCarField(props.id, { lastMileage: +fuelUpData.odometer })
+    //     .then((res) => {})
+    //     .catch((err) => addError(err));
+    //   setCarField(props.id, { KMsTracked: +0 })
+    //     .then((res) => {})
+    //     .catch((err) => addError(err));
+    //   oldFuelUps.push(fuelUpData);
+    // }
   }
 
   return (
@@ -252,98 +243,52 @@ function CarFuelUp(props) {
       <div className="line"></div>
       <form onSubmit={addFuelUpHandler} className="fuel-up">
         <div>
-          Date: <input name="date" type="date" defaultValue={date} />
+          Date:{' '}
+          <input
+            name="date"
+            type="date"
+            defaultValue={inputsData.date}
+            onChange={dateOnChange}
+          />
         </div>
         <div>
           Odometer:
-          <input name="odometer" type="number" />
+          <input
+            name="odometer"
+            type="number"
+            onChange={odometerOnChange}
+            value={inputsData.odometer}
+          />
         </div>
 
         <GasStation
           position={position}
-          gasStation={gasStation}
           gasStations={gasStations}
           suggestions={suggestions}
-          focus={focus}
+          inputsData={inputsData}
           setSuggestions={setSuggestionsHandler}
           setGasStations={setGasStationsHandler}
-          focusHandler={focusHandler}
-          blurHandler={blurHandler}
           setGasStationOnChange={setGasStationOnChange}
-          setGasStationHandler={setGasStationHandler}
         ></GasStation>
 
-        <div>
-          Fuel:
-          <select
-            name="selectedFuel"
-            onChange={selectFuel}
-            value={selectedFuel.name}
-          >
-            {fuels.map((fuel, index) => {
-              return (
-                <option key={index} value={fuel.name}>
-                  {fuel.name}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div>
-          Fuel Type:
-          <select name="type">
-            {types
-              ? types.map((type, index) => {
-                  return (
-                    <option key={index} defaultValue={type}>
-                      {type}
-                    </option>
-                  );
-                })
-              : ''}
-          </select>
-        </div>
-        <div>
-          Liters:
-          <input
-            type="number"
-            name="liters"
-            onChange={litersHandler}
-            step="0.01"
-          />
-        </div>
-        <div>
-          Total Price:
-          <input
-            type="number"
-            name="total"
-            onChange={totalPriceHandler}
-            step="0.01"
-          />
-        </div>
-        <div>
-          Price/L:
-          <input
-            type="number"
-            name="pricePerL"
-            defaultValue={pricePerL}
-            disabled
-          />
-        </div>
-        <div>
-          <div className="full-tank">
-            Full Tank:
-            <input
-              name="fullTank"
-              type="checkbox"
-              id="fullTank"
-              onClick={toggleFullTankCheckBox}
-              value={fullTank}
-            />
-          </div>
-        </div>
+        <Fuel
+          selectedFuel={selectedFuel}
+          fuels={fuels}
+          inputsData={inputsData}
+          selectFuel={selectFuel}
+          selectType={selectType}
+          setTypes={setTypes}
+        ></Fuel>
+
+        <FuelUpData
+          inputsData={inputsData}
+          litersHandler={litersHandler}
+          totalPriceHandler={totalPriceHandler}
+          toggleFullTankCheckBox={toggleFullTankCheckBox}
+        ></FuelUpData>
+
         <div className="line"></div>
-        {props.number ? (
+        {editSelected ? (
           <button type="submit">Edit Fuel Up</button>
         ) : (
           <button type="submit">Add Fuel Up</button>
