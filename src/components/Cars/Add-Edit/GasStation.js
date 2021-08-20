@@ -54,10 +54,7 @@ function GasStation(props) {
             if (
               name
                 .toLowerCase()
-                .includes(
-                  props.inputsData.station.toLowerCase() ||
-                    props.inputsData.station
-                )
+                .includes(props.inputsData.station.toString().toLowerCase())
             ) {
               return (
                 <li

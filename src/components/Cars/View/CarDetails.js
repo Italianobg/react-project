@@ -22,7 +22,7 @@ function CarDetails() {
       .catch((err) => {
         addError(err);
       });
-  }, [id, addError]);
+  }, []);
 
   function deleteCarHandler() {
     if (carData.imageUrl) {
@@ -79,16 +79,21 @@ function CarDetails() {
           </div>
         </div>
         <Route path="/car/:id" exact>
-          <CarDetailsBoxes carData={carData} />
+          <CarDetailsBoxes carData={carData} setCarData={setCarData} />
         </Route>
         <Route path="/car/fuel-up/:id" exact>
-          <CarFuelUp id={id} carData={carData} />
+          <CarFuelUp id={id} carData={carData} setCarData={setCarData} />
         </Route>
         <Route path="/car/fuel-ups/:id" exact>
-          <CarFuelUps id={id} carData={carData} />
+          <CarFuelUps id={id} carData={carData} setCarData={setCarData} />
         </Route>
         <Route path="/car/fuel-ups/:id/edit/:number" exact>
-          <CarFuelUp id={id} number={number} carData={carData} />
+          <CarFuelUp
+            id={id}
+            number={number}
+            carData={carData}
+            setCarData={setCarData}
+          />
         </Route>
       </div>
     </div>

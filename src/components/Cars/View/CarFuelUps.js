@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './CarFuelUps.css';
 
@@ -6,7 +7,7 @@ function CarFuelUps(props) {
     <div className="car-data-wrapper fuel-up-wrapper">
       <h2>Fuel Ups</h2>
       <div className="line"></div>
-      {props.carData['Fuel Ups'] ? (
+      {props.carData.fuelUps ? (
         <div className="fuel-ups">
           <div className="box">
             <h4>
@@ -19,7 +20,7 @@ function CarFuelUps(props) {
               <span>Full Tank</span>
               <span>Edit</span>
             </h4>
-            {props.carData['Fuel Ups'].map((carData) => {
+            {props.carData.fuelUps.map((carData) => {
               return (
                 <p key={carData.odometer}>
                   <span>{carData.date}</span>
@@ -37,9 +38,9 @@ function CarFuelUps(props) {
                   </span>
                   <span>
                     <Link
-                      to={`/car/fuel-ups/${props.id}/edit/${props.carData[
-                        'Fuel Ups'
-                      ].indexOf(carData)}`}
+                      to={`/car/fuel-ups/${
+                        props.id
+                      }/edit/${props.carData.fuelUps.indexOf(carData)}`}
                     >
                       <i className="far fa-edit"></i>
                     </Link>

@@ -1,175 +1,169 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import useAPIError from '../../../hooks/useAPIError';
-import { getCarDetails } from '../../../services/Cars/carFirebase';
 
-function CarDetailsBoxes() {
-  const [carData, setCarData] = useState({});
-  const { id } = useParams();
-  const { addError } = useAPIError();
+function CarDetailsBoxes(props) {
+  const [fuels, setFuels] = useState([]);
+  const [firstMileage, setFirstMileage] = useState();
+  const [lastMileage, setLastMileage] = useState();
+  const [averageMileage, setAverageMileage] = useState();
+  const [worstMileage, setWorstMileage] = useState();
+  const [bestMileage, setBestMileage] = useState();
+  const [averagePriceKm, setAveragePriceKm] = useState();
+
+  function getData(array, key) {
+    return array.map((d) => d[key]);
+  }
+  function getMinData(array, key) {
+    return Math.min(...getData(array, key));
+  }
+  function getMaxData(array, key) {
+    return Math.max(...getData(array, key));
+  }
+
+  function getAverageData(array, key) {
+    return (
+      [...getData(array, key)].reduce((a, b) => a + b) /
+      [...getData(array, key)].length
+    );
+  }
 
   useEffect(() => {
-    getCarDetails(id)
-      .then((car) => {
-        setCarData(car.data());
-      })
-      .catch((err) => {
-        addError(err);
-      });
-  }, []);
+    let fullTankArray = [];
+    let litersSinceLastFull = 0;
+    let totalSinceLastFull = 0;
+    let mileageSinceLastFull = 0;
+
+    if (props.carData.fuelUps) {
+      setFuels([
+        ...new Set(props.carData.fuelUps.map((fuelUp) => fuelUp.fuel)),
+      ]);
+      setFirstMileage(props.carData.fuelUps[0].odometer);
+      setLastMileage(
+        props.carData.fuelUps[props.carData.fuelUps.length - 1].odometer
+      );
+
+      let firstFullTankIndex, lastFullTankIndex;
+      firstFullTankIndex = props.carData.fuelUps.findIndex((x) => x.full);
+      lastFullTankIndex =
+        props.carData.fuelUps.length -
+        1 -
+        props.carData.fuelUps.reverse().findIndex((x) => x.full);
+      props.carData.fuelUps.reverse();
+
+      for (
+        let index = firstFullTankIndex + 1;
+        index <= lastFullTankIndex;
+        index++
+      ) {
+        if (props.carData.fuelUps[index].full) {
+          totalSinceLastFull += props.carData.fuelUps[index].total;
+          litersSinceLastFull += props.carData.fuelUps[index].liters;
+          mileageSinceLastFull +=
+            props.carData.fuelUps[index].odometer -
+            props.carData.fuelUps[index - 1].odometer;
+          fullTankArray.push({
+            total: totalSinceLastFull,
+            liters: litersSinceLastFull,
+            mileage: mileageSinceLastFull,
+            consumption: (litersSinceLastFull / mileageSinceLastFull) * 100,
+            pricePerKM: totalSinceLastFull / mileageSinceLastFull,
+          });
+          litersSinceLastFull = 0;
+          litersSinceLastFull = 0;
+          mileageSinceLastFull = 0;
+        } else {
+          totalSinceLastFull += props.carData.fuelUps[index].total;
+          litersSinceLastFull += props.carData.fuelUps[index].liters;
+          mileageSinceLastFull +=
+            props.carData.fuelUps[index].odometer -
+            props.carData.fuelUps[index - 1].odometer;
+        }
+
+        setWorstMileage(getMaxData(fullTankArray, 'consumption'));
+        setBestMileage(getMinData(fullTankArray, 'consumption'));
+        setAverageMileage(getAverageData(fullTankArray, 'consumption'));
+        setAveragePriceKm(getAverageData(fullTankArray, 'pricePerKM'));
+      }
+    }
+  }, [props.carData]);
   return (
     <div className="car-data-wrapper">
       <h2>Statistics</h2>
       <div className="line"></div>
-      {carData ? (
+      {props.carData ? (
         <div>
           <div className="car-data-boxes">
             <div className="box">
               <h4>Fuel</h4>
-              <p>
-                {carData.fuel ? carData.fuel.map((fuel) => `${fuel} `) : '-'}
-              </p>
+              <p>{fuels.length > 0 ? fuels.join(', ') : '-'}</p>
             </div>
             <div className="box">
               <h4>Odometer</h4>
-              <p>
-                {carData['lastMileage'] ? `${carData['lastMileage']} km` : '-'}
-              </p>
+              <p>{lastMileage ? `${lastMileage} km` : '-'}</p>
             </div>
             <div className="box">
               <h4>KMs Tracked</h4>
               <p>
-                {carData['KMsTracked'] ? `${carData['KMsTracked']} km` : '-'}
+                {lastMileage && firstMileage
+                  ? `${lastMileage - firstMileage} km`
+                  : '-'}
               </p>
             </div>
             <div className="box">
               <h4>Fuel Ups</h4>
-              <p>{carData['Fuel Ups'] ? carData['Fuel Ups'].length : '-'}</p>
+              <p>
+                {props.carData.fuelUps ? props.carData.fuelUps.length : '-'}
+              </p>
             </div>
           </div>
           <div className="car-data-boxes">
             <div className="box">
               <h4>Avg Mileage</h4>
               <p>
-                {carData['Fuel Ups'] &&
-                carData['Fuel Ups'].filter(
-                  (fuelUp) =>
-                    fuelUp.hasOwnProperty('lPerKM') && fuelUp.full === true
-                ).length > 0
-                  ? `${(
-                      carData['Fuel Ups']
-                        .filter(
-                          (fuelUp) => fuelUp.lPerKM && fuelUp.full === true
-                        )
-                        .reduce((a, b) => ({
-                          lPerKM: a.lPerKM + b.lPerKM,
-                        })).lPerKM /
-                      carData['Fuel Ups'].filter(
-                        (fuelUp) => fuelUp.lPerKM && fuelUp.full === true
-                      ).length
-                    ).toFixed(2)} L/100 km`
-                  : '-'}
+                {averageMileage ? `${averageMileage.toFixed(2)} L/100 km` : '-'}
               </p>
             </div>
             <div className="box">
               <h4>Worst Mileage</h4>
               <p>
-                {carData['Fuel Ups'] &&
-                carData['Fuel Ups'].filter(
-                  (fuelUp) =>
-                    fuelUp.hasOwnProperty('lPerKM') && fuelUp.full === true
-                ).length > 0
-                  ? `${Math.max
-                      .apply(
-                        Math,
-                        carData['Fuel Ups']
-                          .filter(
-                            (fuelUp) => fuelUp.lPerKM && fuelUp.full === true
-                          )
-                          .map((fuelUp) => fuelUp.lPerKM)
-                      )
-                      .toFixed(2)} L/100 km`
-                  : '-'}
+                {worstMileage ? `${worstMileage.toFixed(2)} L/100 km` : '-'}
               </p>
             </div>
             <div className="box">
               <h4>Best Mileage</h4>
-              <p>
-                {carData['Fuel Ups'] &&
-                carData['Fuel Ups'].filter(
-                  (fuelUp) =>
-                    fuelUp.hasOwnProperty('lPerKM') && fuelUp.full === true
-                ).length > 0
-                  ? `${Math.min
-                      .apply(
-                        Math,
-                        carData['Fuel Ups']
-                          .filter(
-                            (fuelUp) => fuelUp.lPerKM && fuelUp.full === true
-                          )
-                          .map((fuelUp) => fuelUp.lPerKM)
-                      )
-                      .toFixed(2)} L/100 km`
-                  : '-'}
-              </p>
+              <p>{bestMileage ? `${bestMileage.toFixed(2)} L/100 km` : '-'}</p>
             </div>
           </div>
           <div className="car-data-boxes">
             <div className="box">
               <h4>Average Price / L</h4>
               <p>
-                {carData['Fuel Ups']
+                {props.carData.fuelUps
                   ? `${(
-                      carData['Fuel Ups'].reduce((a, b) => ({
-                        total: a.total + b.total,
-                      })).total /
-                      carData['Fuel Ups'].reduce((a, b) => ({
-                        liters: a.liters + b.liters,
-                      })).liters
+                      getAverageData(props.carData.fuelUps, 'total') /
+                      getAverageData(props.carData.fuelUps, 'liters')
                     ).toFixed(3)}`
                   : '-'}
               </p>
             </div>
             <div className="box">
               <h4>Average Price / Km</h4>
-              <p>
-                {carData['Fuel Ups'] &&
-                carData['Fuel Ups'].filter(
-                  (fuelUp) =>
-                    fuelUp.hasOwnProperty('expnsePerKm') && fuelUp.full === true
-                ).length > 0
-                  ? `${(
-                      carData['Fuel Ups']
-                        .filter(
-                          (fuelUp) => fuelUp.expnsePerKm && fuelUp.full === true
-                        )
-                        .reduce((a, b) => ({
-                          expnsePerKm: a.expnsePerKm + b.expnsePerKm,
-                        })).expnsePerKm /
-                      carData['Fuel Ups'].filter(
-                        (fuelUp) => fuelUp.expnsePerKm && fuelUp.full === true
-                      ).length
-                    ).toFixed(3)}`
-                  : '-'}
-              </p>
+              <p>{averagePriceKm ? `${averagePriceKm.toFixed(3)}` : '-'}</p>
             </div>
             <div className="box">
               <h4>Average Price Fuel Up</h4>
               <p>
-                {carData['Fuel Ups']
-                  ? `${(
-                      carData['Fuel Ups'].reduce((a, b) => ({
-                        total: a.total + b.total,
-                      })).total / carData['Fuel Ups'].length
-                    ).toFixed(2)}`
+                {props.carData.fuelUps
+                  ? `${getAverageData(props.carData.fuelUps, 'total').toFixed(
+                      2
+                    )}`
                   : '-'}
               </p>
             </div>
             <div className="box">
               <h4>Total Money Spend</h4>
               <p>
-                {carData['Fuel Ups']
-                  ? `${carData['Fuel Ups']
+                {props.carData.fuelUps
+                  ? `${props.carData.fuelUps
                       .reduce((a, b) => ({
                         total: a.total + b.total,
                       }))

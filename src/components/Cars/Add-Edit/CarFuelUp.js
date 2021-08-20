@@ -78,10 +78,10 @@ function CarFuelUp(props) {
   useEffect(() => {
     if (props.number >= 0 && Object.keys(props.carData).length > 0) {
       setEditSelected(true);
-      setInputsData({ ...props.carData['Fuel Ups'][props.number] });
+      setInputsData({ ...props.carData['fuelUps'][props.number] });
       setSelectedFuel(
         fuels.find(
-          (fuel) => fuel.name === props.carData['Fuel Ups'][props.number].fuel
+          (fuel) => fuel.name === props.carData['fuelUps'][props.number].fuel
         )
       );
     } else {
@@ -89,7 +89,9 @@ function CarFuelUp(props) {
       setInputsData({
         ...inputsData,
         date,
-        odometer: props.carData.lastMileage,
+        odometer: props.carData.fuelUps
+          ? props.carData.fuelUps[props.carData.fuelUps.length - 1].odometer
+          : '',
       });
     }
   }, [props.carData, date, props.number]);
@@ -159,29 +161,14 @@ function CarFuelUp(props) {
     });
   }
 
-  function mainCarDataEdit(carData, editSelected, index) {
-    if (editSelected) {
-      if (index === 0) {
-        carData.firstMileage = inputsData.odometer;
-      }
-      if (index === carData['Fuel Ups'].length - 1) {
-        carData.lastMileage = inputsData.odometer;
-      }
-    } else {
-      if (!carData.hasOwnProperty('Fuel Ups')) {
-        carData.firstMileage = inputsData.odometer;
-      }
-      carData.lastMileage = inputsData.odometer;
-    }
-    carData.KMsTracked = carData.lastMileage - carData.firstMileage;
-    return carData;
-  }
-
   function fuelUpCarDataEdit(carData, editSelected, index) {
     if (editSelected) {
-      carData['Fuel Ups'][index] = inputsData;
+      carData.fuelUps[index] = inputsData;
     } else {
-      carData['Fuel Ups'].push(inputsData);
+      if (!carData.fuelUps) {
+        carData.fuelUps = [];
+      }
+      carData.fuelUps.push(inputsData);
     }
 
     return carData;
@@ -194,47 +181,15 @@ function CarFuelUp(props) {
     if (errors.length > 0) {
       addError(errors);
     } else {
-      mainCarDataEdit(carData, editSelected, props.number);
       fuelUpCarDataEdit(carData, editSelected, props.number);
 
       fuelUp(props.id, carData)
         .then((res) => {
-          // props.fuelUpToggleHandler(true);
+          props.setCarData(carData);
           history.push(`/car/${id}`);
         })
         .catch((err) => addError(err));
     }
-
-    //   if (!props.carData.fuel.includes(fuelUpData.fuel)) {
-    //     setCarField(props.id, {
-    //       fuel: [...props.carData.fuel, fuelUpData.fuel],
-    //     })
-    //       .then((res) => {})
-    //       .catch((err) => addError(err));
-    //   }
-    //   setCarField(props.id, { lastMileage: +fuelUpData.odometer })
-    //     .then((res) => {})
-    //     .catch((err) => addError(err));
-    //   setCarField(props.id, {
-    //     KMsTracked: +fuelUpData.odometer - +props.carData['firstMileage'],
-    //   })
-    //     .then((res) => {})
-    //     .catch((err) => addError(err));
-    // } else {
-    //   setCarField(props.id, { fuel: [fuelUpData.fuel] })
-    //     .then((res) => {})
-    //     .catch((err) => addError(err));
-    //   setCarField(props.id, { firstMileage: +fuelUpData.odometer })
-    //     .then((res) => {})
-    //     .catch((err) => addError(err));
-    //   setCarField(props.id, { lastMileage: +fuelUpData.odometer })
-    //     .then((res) => {})
-    //     .catch((err) => addError(err));
-    //   setCarField(props.id, { KMsTracked: +0 })
-    //     .then((res) => {})
-    //     .catch((err) => addError(err));
-    //   oldFuelUps.push(fuelUpData);
-    // }
   }
 
   return (
